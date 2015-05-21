@@ -1,7 +1,9 @@
 
 package ch.hearc.meteo.imp.use.remote.pccentral;
 
+import ch.hearc.meteo.imp.reseau.RemoteAfficheurCreator;
 import ch.hearc.meteo.imp.use.remote.PC_I;
+import ch.hearc.meteo.spec.reseau.RemoteAfficheurCreator_I;
 
 public class PCCentral implements PC_I
 	{
@@ -31,6 +33,7 @@ public class PCCentral implements PC_I
 	private void server()
 		{
 		// TODO Auto-generated method stub
+		//RemoteAfficheurCreator_I remoteAfficheur = RemoteAfficheurCreator.getInstance();
 		}
 
 	/*------------------------------------------------------------------*\
