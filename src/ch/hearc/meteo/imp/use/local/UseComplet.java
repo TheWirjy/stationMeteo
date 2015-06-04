@@ -2,7 +2,10 @@
 package ch.hearc.meteo.imp.use.local;
 
 import ch.hearc.meteo.imp.afficheur.simulateur.AfficheurSimulateurFactory;
-import ch.hearc.meteo.imp.com.simulateur.MeteoServiceSimulatorFactory;
+import ch.hearc.meteo.imp.com.logique.MeteoServiceCallback_I;
+import ch.hearc.meteo.imp.com.real.MeteoService;
+import ch.hearc.meteo.imp.com.real.com.ComConnexion;
+import ch.hearc.meteo.imp.com.real.com.ComOption;
 import ch.hearc.meteo.spec.afficheur.AffichageOptions;
 import ch.hearc.meteo.spec.afficheur.AfficheurService_I;
 import ch.hearc.meteo.spec.com.meteo.MeteoServiceOptions;
@@ -36,8 +39,12 @@ public class UseComplet
 
 	public static void main() throws MeteoServiceException
 		{
-		String portName = "COM1";
-		MeteoService_I meteoService = (new MeteoServiceSimulatorFactory()).create(portName);
+		String portName = "COM8";
+		//MeteoService_I meteoService = (new MeteoServiceSimulatorFactory()).create(portName);
+		ComOption comOption = new ComOption();
+		ComConnexion comConnexion=new ComConnexion(portName,  comOption );
+		MeteoService_I meteoService=new MeteoService(comConnexion);
+		comConnexion.setMeteoServiceCallback((MeteoServiceCallback_I)meteoService);
 		use(meteoService);
 		}
 
@@ -71,15 +78,15 @@ public class UseComplet
 					afficheurService.printTemperature(event);
 					}
 
-				//				@Override public void altitudePerformed(MeteoEvent event)
-				//					{
-				//					afficheurService.printAltitude(event);
-				//					}
-				//
-				//				@Override public void pressionPerformed(MeteoEvent event)
-				//					{
-				//					afficheurService.printPression(event);
-				//					}
+				@Override public void altitudePerformed(MeteoEvent event)
+					{
+					afficheurService.printAltitude(event);
+					}
+
+				@Override public void pressionPerformed(MeteoEvent event)
+					{
+					afficheurService.printPression(event);
+					}
 
 			});
 

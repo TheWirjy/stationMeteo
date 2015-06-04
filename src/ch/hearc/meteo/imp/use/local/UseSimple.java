@@ -1,7 +1,10 @@
 
 package ch.hearc.meteo.imp.use.local;
 
-import ch.hearc.meteo.imp.com.simulateur.MeteoServiceSimulatorFactory;
+import ch.hearc.meteo.imp.com.logique.MeteoServiceCallback_I;
+import ch.hearc.meteo.imp.com.real.MeteoService;
+import ch.hearc.meteo.imp.com.real.com.ComConnexion;
+import ch.hearc.meteo.imp.com.real.com.ComOption;
 import ch.hearc.meteo.spec.com.meteo.MeteoServiceOptions;
 import ch.hearc.meteo.spec.com.meteo.MeteoService_I;
 import ch.hearc.meteo.spec.com.meteo.exception.MeteoServiceException;
@@ -29,7 +32,11 @@ public class UseSimple
 
 	public static void main() throws MeteoServiceException
 		{
-		MeteoService_I meteoService = (new MeteoServiceSimulatorFactory()).create("COM1");
+		//MeteoService_I meteoService = (new MeteoServiceSimulatorFactory()).create("COM1");
+		ComOption comOption = new ComOption();
+		ComConnexion comConnexion=new ComConnexion("COM8",  comOption );
+		MeteoService_I meteoService=new MeteoService(comConnexion);
+		comConnexion.setMeteoServiceCallback((MeteoServiceCallback_I)meteoService);
 		use(meteoService);
 		}
 
@@ -40,17 +47,20 @@ public class UseSimple
 		meteoService.addMeteoListener(new MeteoListener_I()
 			{
 
-				@Override public void temperaturePerformed(MeteoEvent event)
+				@Override
+				public void temperaturePerformed(MeteoEvent event)
 					{
 					System.out.println(event);
 					}
 
-				@Override public void pressionPerformed(MeteoEvent event)
+				@Override
+				public void pressionPerformed(MeteoEvent event)
 					{
 					System.out.println(event);
 					}
 
-				@Override public void altitudePerformed(MeteoEvent event)
+				@Override
+				public void altitudePerformed(MeteoEvent event)
 					{
 					System.out.println(event);
 					}
