@@ -53,15 +53,14 @@ public class RemoteAfficheurCreator implements RemoteAfficheurCreator_I
 			// server
 			{
 			AfficheurService_I afficheurService = createAfficheurService(affichageOptions, meteoServiceRemote);
-			
+
 			// TODO share afficheurService
 			/***************** moi **********************/
 			AfficheurServiceWrapper afficheurServiceWrapper = new AfficheurServiceWrapper(afficheurService);
 			RmiURL afficheurServicermiURL = rmiUrl();
 			RmiTools.shareObject(afficheurServiceWrapper, afficheurServicermiURL);
 			/*********************************************/
-			
-			//RmiURL afficheurServicermiURL = rmiUrl();
+
 			return afficheurServicermiURL; // Retourner le RMI-ID pour une connection distante sur le serveur d'affichage
 			}
 		}
@@ -89,7 +88,7 @@ public class RemoteAfficheurCreator implements RemoteAfficheurCreator_I
 		// TODO
 		/***************** MOI *********************/
 		//PROVISOIRE SIMULATEUR
-		return new AfficheurSimulateurFactory().createOnCentralPC(affichageOptions, meteoServiceRemote);
+		return (new AfficheurSimulateurFactory()).createOnCentralPC(affichageOptions, meteoServiceRemote);
 		/********************************************/
 		}
 
