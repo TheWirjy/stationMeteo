@@ -40,9 +40,9 @@ public class PCCentral implements PC_I
 		catch (RemoteException e)
 			{
 			// TODO Auto-generated catch block
+			System.out.println("erreur getInstance");
 			e.printStackTrace();
 			}
-
 		}
 
 	/*------------------------------------------------------------------*\

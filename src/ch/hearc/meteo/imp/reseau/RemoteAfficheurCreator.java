@@ -61,7 +61,6 @@ public class RemoteAfficheurCreator implements RemoteAfficheurCreator_I
 			RmiTools.shareObject(afficheurServiceWrapper, afficheurServicermiURL);
 			/*********************************************/
 
-			//RmiURL afficheurServicermiURL = rmiUrl();
 			return afficheurServicermiURL; // Retourner le RMI-ID pour une connection distante sur le serveur d'affichage
 			}
 		}

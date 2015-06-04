@@ -21,7 +21,7 @@ public class UsePCLocal
 
 	public static void main()
 		{
-
+		
 		RmiURL rmiUrl = new RmiURL(RemoteAfficheurCreator.RMI_ID);
 
 		MeteoServiceOptions meteoServiceOptions = new MeteoServiceOptions(800, 1000, 1200);

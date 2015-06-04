@@ -16,6 +16,7 @@ import ch.hearc.meteo.spec.com.meteo.listener.event.MeteoEvent;
 import ch.hearc.meteo.spec.reseau.RemoteAfficheurCreator_I;
 import ch.hearc.meteo.spec.reseau.rmiwrapper.AfficheurServiceWrapper_I;
 import ch.hearc.meteo.spec.reseau.rmiwrapper.MeteoServiceWrapper;
+import ch.hearc.meteo.spec.reseau.rmiwrapper.MeteoServiceWrapper_I;
 
 import com.bilat.tools.reseau.rmi.IdTools;
 import com.bilat.tools.reseau.rmi.RmiTools;
@@ -45,11 +46,13 @@ public class PCLocal implements PC_I
 
 		try
 			{
+			afficheurRemote = (RemoteAfficheurCreator_I)RmiTools.connectionRemoteObjectBloquant(this.rmiURLafficheurManager);
+			//AfficheurService_I afficheur = new AfficheurSimulateurFactory().createOnLocalPC(affichageOptions, null);
 			server(); // avant
 			}
 		catch (Exception e)
 			{
-			System.err.println("[PCLocal :  run : server : failed");
+			System.out.println("[PCLocal :  run : server : failed");
 			e.printStackTrace();
 			}
 
@@ -59,7 +62,7 @@ public class PCLocal implements PC_I
 			}
 		catch (RemoteException e)
 			{
-			System.err.println("[PCLocal :  run : client : failed");
+			System.out.println("[PCLocal :  run : client : failed");
 			e.printStackTrace();
 			}
 		catch (MeteoServiceException e)
@@ -81,11 +84,13 @@ public class PCLocal implements PC_I
 		{
 		// TODO Auto-generated method stub
 		/********************** moi ****************************/
-		meteoService = (new MeteoServiceSimulatorFactory()).create(portCom);
-		meteoServiceWrapper = new MeteoServiceWrapper(meteoService);
-		rmiURL = new RmiURL(IdTools.createID(PREFIX));
+		this.meteoService = (new MeteoServiceSimulatorFactory()).create(this.portCom);
+		meteoService.connect();
+		meteoService.start(meteoServiceOptions);
+		this.meteoServiceWrapper = new MeteoServiceWrapper(this.meteoService);
+		this.rmiURL = new RmiURL(IdTools.createID(PREFIX));
 
-		RmiTools.shareObject(meteoServiceWrapper, rmiURL);
+		RmiTools.shareObject(this.meteoServiceWrapper, this.rmiURL);
 		/*******************************************************/
 		}
 
@@ -96,54 +101,57 @@ public class PCLocal implements PC_I
 	private void client() throws RemoteException, MeteoServiceException
 		{
 		// TODO Auto-generated method stub
-		RemoteAfficheurCreator_I afficheurRemote = (RemoteAfficheurCreator_I)RmiTools.connectionRemoteObjectBloquant(rmiURLafficheurManager);
 
-		RmiURL rmiURLafficheurServiceWrapper = afficheurRemote.createRemoteAfficheurService(affichageOptions, rmiURL);
+		RmiURL rmiURLafficheurServiceWrapper = afficheurRemote.createRemoteAfficheurService(this.affichageOptions, this.rmiURL);
 		final AfficheurServiceWrapper_I afficheurServiceWrapper = (AfficheurServiceWrapper_I)RmiTools.connectionRemoteObjectBloquant(rmiURLafficheurServiceWrapper);
-		final AfficheurService_I afficheurService = (new AfficheurSimulateurFactory()).createOnLocalPC(affichageOptions, meteoServiceWrapper);
+		
+		final AfficheurService_I afficheurService = (new AfficheurSimulateurFactory()).createOnLocalPC(this.affichageOptions, (MeteoServiceWrapper_I)this.meteoServiceWrapper);
+		
+		this.meteoService.addMeteoListener(new MeteoListener_I()
+		{
 
-		meteoService.connect();
-		meteoService.start(meteoServiceOptions);
-		meteoService.addMeteoListener(new MeteoListener_I()
-			{
-
-				@Override public void temperaturePerformed(MeteoEvent event)
+			@Override public void temperaturePerformed(MeteoEvent event)
+				{
+				try
 					{
-					try
-						{
-						afficheurService.printTemperature(event);
-						afficheurServiceWrapper.printTemperature(event);
-						}
-					catch (RemoteException e)
-						{
-						System.out.println("erreur print temperature");
-						}
+					afficheurService.printTemperature(event);
+					afficheurServiceWrapper.printTemperature(event);
 					}
-
-				@Override public void pressionPerformed(MeteoEvent event)
+				catch (RemoteException e)
 					{
-					try
-						{
-						afficheurServiceWrapper.printPression(event);
-						}
-					catch (RemoteException e)
-						{
-						System.out.println("erreur print pression");
-						}
+					System.out.println("erreur print temperature");
 					}
+				}
 
-				@Override public void altitudePerformed(MeteoEvent event)
+			@Override public void pressionPerformed(MeteoEvent event)
+				{
+				try
 					{
-					try
-						{
-						afficheurServiceWrapper.printAltitude(event);
-						}
-					catch (RemoteException e)
-						{
-						System.out.println("erreur print altitude");
-						}
+					afficheurServiceWrapper.printPression(event);
+					afficheurService.printPression(event);
 					}
-			});
+				catch (RemoteException e)
+					{
+					System.out.println("erreur print pression");
+					}
+				}
+
+			@Override public void altitudePerformed(MeteoEvent event)
+				{
+				try
+					{
+					afficheurServiceWrapper.printAltitude(event);
+					afficheurService.printAltitude(event);
+					}
+				catch (RemoteException e)
+					{
+					System.out.println("erreur print altitude");
+					}
+				}
+		});
+		
+		/*meteoService.connect();
+		meteoService.start(meteoServiceOptions);*/
 		}
 
 	/*------------------------------------------------------------------*\
@@ -160,5 +168,6 @@ public class PCLocal implements PC_I
 	// Tools
 	private final static String PREFIX = "METEO_SERVICE";
 	private RmiURL rmiURL;
+	private RemoteAfficheurCreator_I afficheurRemote;
 	private MeteoService_I meteoService;
 	}
