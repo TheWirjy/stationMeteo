@@ -3,8 +3,11 @@ package ch.hearc.meteo.imp.use.remote.pclocal;
 
 import java.rmi.RemoteException;
 
-import ch.hearc.meteo.imp.afficheur.simulateur.AfficheurSimulateurFactory;
-import ch.hearc.meteo.imp.com.simulateur.MeteoServiceSimulatorFactory;
+import ch.hearc.meteo.imp.afficheur.real.local.AfficheurRealFactory;
+import ch.hearc.meteo.imp.com.logique.MeteoServiceCallback_I;
+import ch.hearc.meteo.imp.com.real.MeteoService;
+import ch.hearc.meteo.imp.com.real.com.ComConnexion;
+import ch.hearc.meteo.imp.com.real.com.ComOption;
 import ch.hearc.meteo.imp.use.remote.PC_I;
 import ch.hearc.meteo.spec.afficheur.AffichageOptions;
 import ch.hearc.meteo.spec.afficheur.AfficheurService_I;
@@ -20,6 +23,8 @@ import ch.hearc.meteo.spec.reseau.rmiwrapper.MeteoServiceWrapper;
 import com.bilat.tools.reseau.rmi.IdTools;
 import com.bilat.tools.reseau.rmi.RmiTools;
 import com.bilat.tools.reseau.rmi.RmiURL;
+
+
 
 public class PCLocal implements PC_I
 	{
@@ -83,7 +88,13 @@ public class PCLocal implements PC_I
 		{
 		// TODO Auto-generated method stub
 		/********************** moi ****************************/
-		this.meteoService = (new MeteoServiceSimulatorFactory()).create(this.portCom);
+		//this.meteoService = (new MeteoServiceSimulatorFactory()).create(this.portCom);
+		String portName = "COM8";
+		//MeteoService_I meteoService = (new MeteoServiceSimulatorFactory()).create(portName);
+		ComOption comOption = new ComOption();
+		ComConnexion comConnexion=new ComConnexion(portName,  comOption );
+		meteoService=new MeteoService(comConnexion);
+		comConnexion.setMeteoServiceCallback((MeteoServiceCallback_I)meteoService);
 		meteoService.connect();
 		meteoService.start(meteoServiceOptions);
 		this.meteoServiceWrapper = new MeteoServiceWrapper(this.meteoService);
@@ -104,7 +115,7 @@ public class PCLocal implements PC_I
 		RmiURL rmiURLafficheurServiceWrapper = afficheurRemote.createRemoteAfficheurService(this.affichageOptions, this.rmiURL);
 		final AfficheurServiceWrapper_I afficheurServiceWrapper = (AfficheurServiceWrapper_I)RmiTools.connectionRemoteObjectBloquant(rmiURLafficheurServiceWrapper);
 
-		final AfficheurService_I afficheurService = (new AfficheurSimulateurFactory()).createOnLocalPC(this.affichageOptions, this.meteoServiceWrapper);
+		final AfficheurService_I afficheurService = (new AfficheurRealFactory()).createOnLocalPC(this.affichageOptions, this.meteoServiceWrapper);
 
 		this.meteoService.addMeteoListener(new MeteoListener_I()
 		{

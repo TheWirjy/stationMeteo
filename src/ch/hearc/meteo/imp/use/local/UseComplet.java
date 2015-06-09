@@ -1,7 +1,7 @@
 
 package ch.hearc.meteo.imp.use.local;
 
-import ch.hearc.meteo.imp.afficheur.simulateur.AfficheurSimulateurFactory;
+import ch.hearc.meteo.imp.afficheur.real.local.AfficheurRealFactory;
 import ch.hearc.meteo.imp.com.logique.MeteoServiceCallback_I;
 import ch.hearc.meteo.imp.com.real.MeteoService;
 import ch.hearc.meteo.imp.com.real.com.ComConnexion;
@@ -60,9 +60,9 @@ public class UseComplet
 
 		String titre = RmiTools.getLocalHost() + " " + meteoService.getPort();
 		AffichageOptions affichageOption = new AffichageOptions(3, titre);
-		AfficheurService_I afficheurService = (new AfficheurSimulateurFactory()).createOnLocalPC(affichageOption, meteoServiceWrapper);
+		AfficheurService_I afficheurService1 = (new AfficheurRealFactory()).createOnLocalPC(affichageOption, meteoServiceWrapper);
 
-		use(meteoService, afficheurService);
+		use(meteoService, afficheurService1);
 		}
 
 	/**
