@@ -16,7 +16,6 @@ import ch.hearc.meteo.spec.com.meteo.listener.event.MeteoEvent;
 import ch.hearc.meteo.spec.reseau.RemoteAfficheurCreator_I;
 import ch.hearc.meteo.spec.reseau.rmiwrapper.AfficheurServiceWrapper_I;
 import ch.hearc.meteo.spec.reseau.rmiwrapper.MeteoServiceWrapper;
-import ch.hearc.meteo.spec.reseau.rmiwrapper.MeteoServiceWrapper_I;
 
 import com.bilat.tools.reseau.rmi.IdTools;
 import com.bilat.tools.reseau.rmi.RmiTools;
@@ -104,9 +103,9 @@ public class PCLocal implements PC_I
 
 		RmiURL rmiURLafficheurServiceWrapper = afficheurRemote.createRemoteAfficheurService(this.affichageOptions, this.rmiURL);
 		final AfficheurServiceWrapper_I afficheurServiceWrapper = (AfficheurServiceWrapper_I)RmiTools.connectionRemoteObjectBloquant(rmiURLafficheurServiceWrapper);
-		
-		final AfficheurService_I afficheurService = (new AfficheurSimulateurFactory()).createOnLocalPC(this.affichageOptions, (MeteoServiceWrapper_I)this.meteoServiceWrapper);
-		
+
+		final AfficheurService_I afficheurService = (new AfficheurSimulateurFactory()).createOnLocalPC(this.affichageOptions, this.meteoServiceWrapper);
+
 		this.meteoService.addMeteoListener(new MeteoListener_I()
 		{
 
@@ -149,7 +148,7 @@ public class PCLocal implements PC_I
 					}
 				}
 		});
-		
+
 		/*meteoService.connect();
 		meteoService.start(meteoServiceOptions);*/
 		}
