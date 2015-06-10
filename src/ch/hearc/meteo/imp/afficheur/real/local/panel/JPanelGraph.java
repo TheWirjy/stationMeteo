@@ -4,10 +4,11 @@ package ch.hearc.meteo.imp.afficheur.real.local.panel;
 import java.awt.BorderLayout;
 import java.awt.Color;
 import java.awt.Font;
-import java.awt.Graphics;
 import java.awt.Image;
+import java.util.List;
 
-import javax.swing.JComponent;
+import javax.swing.ImageIcon;
+import javax.swing.JPanel;
 
 import org.jfree.chart.ChartFactory;
 import org.jfree.chart.ChartPanel;
@@ -18,103 +19,99 @@ import org.jfree.chart.renderer.xy.XYLineAndShapeRenderer;
 import org.jfree.data.xy.XYSeries;
 import org.jfree.data.xy.XYSeriesCollection;
 
-import ch.hearc.meteo.spec.afficheur.AfficheurService_I;
-import ch.hearc.meteo.spec.com.meteo.MeteoServiceOptions;
+import ch.hearc.meteo.imp.afficheur.real.local.ImageLoader;
+import ch.hearc.meteo.imp.afficheur.real.manage.AfficheurServiceMOO;
+import ch.hearc.meteo.imp.afficheur.real.manage.Stat;
 import ch.hearc.meteo.spec.com.meteo.listener.event.MeteoEvent;
 
-public class JPanelGraph extends JComponent implements AfficheurService_I
+public class JPanelGraph extends JPanel
 	{
 
 	/*------------------------------------------------------------------*\
 	|*							Constructeurs							*|
 	\*------------------------------------------------------------------*/
-	public JPanelGraph(String titre, String unite)
+	public JPanelGraph(String titre, String unite, Stat stat, List<MeteoEvent> list, AfficheurServiceMOO afficheurServiceMOO)
 		{
+		this.afficheurServiceMOO = afficheurServiceMOO;
+		this.stat = stat;
+		this.list = list;
 		this.titre = titre;
 		this.unite = unite;
 		compteurGraph = 0;
 		geometry();
 		control();
 		apparance();
+		useDraw();
 
 		}
 
 	/*------------------------------------------------------------------*\
 	|*							Methodes Public							*|
 	\*------------------------------------------------------------------*/
-	private Image bg;
-
-	/** Surcharge de la fonction paintComponent() pour afficher notre image */
-	@Override
-	public void paintComponent(Graphics g)
-		{
-		g.drawImage(bg, 0, 0, null);
-		}
-
-	@Override
-	public void printPression(MeteoEvent event)
-		{
-		draw(event.getValue());
-
-		}
-
-	@Override
-	public void printAltitude(MeteoEvent event)
-		{
-		draw(event.getValue());
-
-		}
-
-	@Override
-	public void printTemperature(MeteoEvent event)
-		{
-		draw(event.getValue());
-
-		}
-
-	@Override
-	public void updateMeteoServiceOptions(MeteoServiceOptions meteoServiceOptions)
-		{
-
-		}
 
 	/*------------------------------------------------------------------*\
 	|*							Methodes Private						*|
 	\*------------------------------------------------------------------*/
+
+	private void useDraw()
+		{
+		Thread t1 = new Thread(new Runnable()
+			{
+
+				@Override
+				public void run()
+					{
+
+					while(true)
+						{
+						draw(stat.getLast());
+						attendre(1000);
+						}
+
+					}
+			});
+		t1.start();
+		}
+
+	private static void attendre(long delay)
+		{
+		try
+			{
+			Thread.sleep(delay);
+			}
+		catch (InterruptedException e)
+			{
+			e.printStackTrace();
+			}
+		}
+
 	private void draw(float value)
 		{
 
 		compteurGraph++;
-		deltat = 0.1;
+		deltat = 1;
 		if (series.getItemCount() > JPanelAffichage.getN())
 			{
 			series.clear();
 			}
 		series.add(deltat * compteurGraph, value);
-
 		}
 
 	private void control()
 		{
 		//rien
-
 		}
 
 	private void apparance()
 		{
 		//rien
-		//		final ImageIcon backgroundImg = ImageLoader.loadSynchroneJar("ressources/background.png");
-		//		JLabel lblNewLabel = new JLabel("New label");
-		//		lblNewLabel.setHorizontalAlignment(SwingConstants.CENTER);
-		//		lblNewLabel.setIcon(backgroundImg);
-		//		add(lblNewLabel,BorderLayout.CENTER);
 
 		}
 
 	private void geometry()
 		{
 
-		setLayout(new java.awt.BorderLayout());
+		setLayout(new BorderLayout());
 		series = new XYSeries(unite);
 		// Add the series to your data set
 		XYSeriesCollection dataset = new XYSeriesCollection();
@@ -146,9 +143,10 @@ public class JPanelGraph extends JComponent implements AfficheurService_I
 		//chart.setBackgroundPaint(UIManager.getColor("Button.background"));
 		//chart.setBackgroundPaint(new Color(0, 0, 0, 0)); //rendre le background transparant
 
+		final ImageIcon bg = ImageLoader.loadSynchroneJar("ressources/background3.png");
 
-		JPanelBackground background = new JPanelBackground("/background3.png");
-		chart.setBackgroundImage(background.bgimage);
+		//JPanelBackground background = new JPanelBackground(bg.getImage());
+		chart.setBackgroundImage(bg.getImage());
 
 		//Font
 		Font font = new Font("Arial", Font.PLAIN, 15);
@@ -162,6 +160,7 @@ public class JPanelGraph extends JComponent implements AfficheurService_I
 		ChartPanel CP = new ChartPanel(chart);
 		add(CP, BorderLayout.CENTER);
 		validate();
+
 		}
 
 	/*------------------------------------------------------------------*\
@@ -172,4 +171,8 @@ public class JPanelGraph extends JComponent implements AfficheurService_I
 	private XYSeries series;
 	private String titre;
 	private String unite;
+	private Image bg;
+	private Stat stat;
+	private List<MeteoEvent> list;
+	private AfficheurServiceMOO afficheurServiceMOO;
 	}

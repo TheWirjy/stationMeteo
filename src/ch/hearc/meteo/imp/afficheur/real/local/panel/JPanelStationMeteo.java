@@ -6,22 +6,19 @@ import java.awt.BorderLayout;
 import javax.swing.Box;
 import javax.swing.JPanel;
 
-import ch.hearc.meteo.spec.afficheur.AfficheurService_I;
+import ch.hearc.meteo.imp.afficheur.real.manage.AfficheurServiceMOO;
 import ch.hearc.meteo.spec.com.meteo.MeteoServiceOptions;
-import ch.hearc.meteo.spec.com.meteo.MeteoService_I;
-import ch.hearc.meteo.spec.com.meteo.listener.event.MeteoEvent;
 
-public class JPanelStationMeteo extends JPanel implements AfficheurService_I
+public class JPanelStationMeteo extends JPanel
 	{
 
 	/*------------------------------------------------------------------*\
 	|*							Constructeurs							*|
 	\*------------------------------------------------------------------*/
 
-	public JPanelStationMeteo(String titre, MeteoService_I meteoService)
+	public JPanelStationMeteo(AfficheurServiceMOO afficheurServiceMOO)
 		{
-		this.meteoService = meteoService;
-		this.titre = titre;
+		this.afficheurServiceMOO = afficheurServiceMOO;
 		geometry();
 		control();
 		apparance();
@@ -30,33 +27,6 @@ public class JPanelStationMeteo extends JPanel implements AfficheurService_I
 	/*------------------------------------------------------------------*\
 	|*							Methodes Public							*|
 	\*------------------------------------------------------------------*/
-	@Override
-	public void printPression(MeteoEvent event)
-		{
-		panelAfficheur.printPression(event);
-
-		}
-
-	@Override
-	public void printAltitude(MeteoEvent event)
-		{
-		panelAfficheur.printAltitude(event);
-
-		}
-
-	@Override
-	public void printTemperature(MeteoEvent event)
-		{
-		panelAfficheur.printTemperature(event);
-
-		}
-
-	@Override
-	public void updateMeteoServiceOptions(MeteoServiceOptions meteoServiceOptions)
-		{
-		// TODO Auto-generated method stub
-
-		}
 
 	/*------------------------------*\
 	|*				Get				*|
@@ -70,16 +40,6 @@ public class JPanelStationMeteo extends JPanel implements AfficheurService_I
 	public JPanelAffichage getPanelAfficheur()
 		{
 		return this.panelAfficheur;
-		}
-
-	public JPanelControl getPanelBoutons()
-		{
-		return this.panelControl;
-		}
-
-	public MeteoService_I getMeteoService()
-		{
-		return this.meteoService;
 		}
 
 	/*------------------------------------------------------------------*\
@@ -97,20 +57,27 @@ public class JPanelStationMeteo extends JPanel implements AfficheurService_I
 		boxH.add(Box.createHorizontalGlue());
 
 		BorderLayout borderLayout = new BorderLayout();
-		borderLayout.setHgap(5);
-		borderLayout.setVgap(5);
 		setLayout(borderLayout);
 
-		add(boxH, BorderLayout.NORTH);
 		add(panelAfficheur, BorderLayout.CENTER);
-		add(panelControl, BorderLayout.SOUTH);
+		//add(panelControl, BorderLayout.SOUTH);
 		}
 
 	private void geometry()
 		{
 
-		this.panelAfficheur = new JPanelAffichage();
-		this.panelControl = new JPanelControl(panelAfficheur, meteoService);
+		this.panelAfficheur = new JPanelAffichage(afficheurServiceMOO);
+		//this.panelControl = new JPanelControl(panelAfficheur, afficheurServiceMOO);
+		}
+
+	public void update()
+		{
+		panelAfficheur.update();
+		}
+
+	public void updateMeteoServiceOptions(MeteoServiceOptions meteoServiceOptions)
+		{
+		//	panelSlider.updateMeteoServiceOptions( meteoServiceOptions);
 		}
 
 	/*------------------------------------------------------------------*\
@@ -118,10 +85,10 @@ public class JPanelStationMeteo extends JPanel implements AfficheurService_I
 	\*------------------------------------------------------------------*/
 	//Input
 	private String titre;
-	private MeteoService_I meteoService;
+	private AfficheurServiceMOO afficheurServiceMOO;
 
 	//Tools
 	private JPanelAffichage panelAfficheur;
-	private JPanelControl panelControl;
+	//private JPanelControl panelControl;
 
 	}

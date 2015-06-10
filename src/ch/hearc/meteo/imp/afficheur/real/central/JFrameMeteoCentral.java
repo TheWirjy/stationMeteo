@@ -16,12 +16,14 @@ import javax.swing.SwingConstants;
 import ch.hearc.meteo.imp.afficheur.real.central.panel.JPanelDefault;
 import ch.hearc.meteo.imp.afficheur.real.central.panel.JPanelListMap;
 import ch.hearc.meteo.imp.afficheur.real.central.panel.JPanelMap;
+import ch.hearc.meteo.imp.afficheur.real.manage.AfficheurServiceMOO;
 
 public class JFrameMeteoCentral extends JFrame
 	{
 
-	public JFrameMeteoCentral()
+	public JFrameMeteoCentral(AfficheurServiceMOO afficheurServiceMOO)
 		{
+		this.afficheurServiceMOO = afficheurServiceMOO;
 		geometry();
 		control();
 		appearance();
@@ -36,7 +38,7 @@ public class JFrameMeteoCentral extends JFrame
 		JTabbedPane tabbedPane = new JTabbedPane(SwingConstants.TOP);
 		panelOnglet.add(tabbedPane, BorderLayout.CENTER);
 
-		panelDefaultTabbed = new JPanelDefault();
+		panelDefaultTabbed = new JPanelDefaultafficheurServiceMOO);
 		tabbedPane.addTab("Default", null, panelDefaultTabbed, null);
 
 		JPanel panelMapTabbed = new JPanel();
@@ -89,5 +91,6 @@ public class JFrameMeteoCentral extends JFrame
 		}
 
 	private JPanelDefault panelDefaultTabbed;
+	private AfficheurServiceMOO afficheurServiceMOO;
 
 	}

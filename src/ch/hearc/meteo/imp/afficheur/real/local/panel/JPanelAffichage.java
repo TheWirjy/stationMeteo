@@ -2,24 +2,29 @@
 package ch.hearc.meteo.imp.afficheur.real.local.panel;
 
 import java.awt.GridLayout;
+import java.rmi.RemoteException;
 import java.util.ArrayList;
 import java.util.List;
 
 import javax.swing.JPanel;
+import javax.swing.JSlider;
+import javax.swing.event.ChangeEvent;
+import javax.swing.event.ChangeListener;
 
-import ch.hearc.meteo.spec.afficheur.AfficheurService_I;
+import ch.hearc.meteo.imp.afficheur.real.manage.AfficheurServiceMOO;
 import ch.hearc.meteo.spec.com.meteo.MeteoServiceOptions;
 import ch.hearc.meteo.spec.com.meteo.listener.event.MeteoEvent;
 
-public class JPanelAffichage extends JPanel implements AfficheurService_I
+public class JPanelAffichage extends JPanel
 	{
 
 	/*------------------------------------------------------------------*\
 	|*							Constructeurs							*|
 	\*------------------------------------------------------------------*/
 
-	public JPanelAffichage()
+	public JPanelAffichage(AfficheurServiceMOO afficheurServiceMOO)
 		{
+		this.afficheurServiceMOO = afficheurServiceMOO;
 		geometry();
 		control();
 		apparance();
@@ -31,43 +36,16 @@ public class JPanelAffichage extends JPanel implements AfficheurService_I
 
 	public void setEnableAllSlider(boolean enable)
 		{
-		panelAltitude.getPanelDigital().setEnableSlider(enable);
-		panelPression.getPanelDigital().setEnableSlider(enable);
-		panelTemperature.getPanelDigital().setEnableSlider(enable);
+		panelAltitude.getPanelGraphInfo().setEnableSlider(enable);
+		panelPression.getPanelGraphInfo().setEnableSlider(enable);
+		panelTemperature.getPanelGraphInfo().setEnableSlider(enable);
 		}
 
-	@Override
-	public void printPression(MeteoEvent event)
+	public void update()
 		{
-		panelPression.printPression(event);
-		reduceListSize(listPression, event);
-		fillDigital(panelPression, listPression);
-
-		}
-
-	@Override
-	public void printAltitude(MeteoEvent event)
-		{
-		panelAltitude.printAltitude(event);
-		reduceListSize(listAltitude, event);
-		fillDigital(panelAltitude, listAltitude);
-
-		}
-
-	@Override
-	public void printTemperature(MeteoEvent event)
-		{
-		panelTemperature.printTemperature(event);
-		reduceListSize(listTemperature, event);
-		fillDigital(panelTemperature, listTemperature);
-
-		}
-
-	@Override
-	public void updateMeteoServiceOptions(MeteoServiceOptions meteoServiceOptions)
-		{
-		// TODO Auto-generated method stub
-
+		panelAltitude.update();
+		panelPression.update();
+		panelTemperature.update();
 		}
 
 	/*------------------------------*\
@@ -101,9 +79,10 @@ public class JPanelAffichage extends JPanel implements AfficheurService_I
 
 	private void geometry()
 		{
-		panelTemperature = new JPanelGraphInfo("Température", "°C");
-		panelPression = new JPanelGraphInfo("Pression", "hPa");
-		panelAltitude = new JPanelGraphInfo("Altitude", "m");
+
+		panelTemperature = new JPanelGraphInfo("Température", "°C", afficheurServiceMOO.getStatTemperature(), afficheurServiceMOO.getListTemperature(), afficheurServiceMOO);
+		panelPression = new JPanelGraphInfo("Pression", "hPa", afficheurServiceMOO.getStatPression(), afficheurServiceMOO.getListPression(), afficheurServiceMOO);
+		panelAltitude = new JPanelGraphInfo("Altitude", "m", afficheurServiceMOO.getStatAltitude(), afficheurServiceMOO.getListAltitude(), afficheurServiceMOO);
 		listAltitude = new ArrayList<MeteoEvent>(N);
 		listPression = new ArrayList<MeteoEvent>(N);
 		listTemperature = new ArrayList<MeteoEvent>(N);
@@ -119,67 +98,123 @@ public class JPanelAffichage extends JPanel implements AfficheurService_I
 		this.add(panelTemperature);
 		this.add(panelPression);
 		this.add(panelAltitude);
+		saveSliderValue();
+		updateSliderValue();
+
 		}
 
-	private void fillDigital(JPanelGraphInfo panelMeteoEvent, List<MeteoEvent> list)
+	public void saveSliderValue()
 		{
-		tabMinMoyMax = findMinMoyMax(list);
-		panelMeteoEvent.getPanelDigital().setValue(tabMinMoyMax[3]);
-		panelMeteoEvent.getPanelDigital().setMaxValue(tabMinMoyMax[2]);
-		panelMeteoEvent.getPanelDigital().setMinValue(tabMinMoyMax[0]);
-		panelMeteoEvent.getPanelDigital().setMoyValue(tabMinMoyMax[1]);
-		panelMeteoEvent.getPanelDigital().refresh();
-		}
-
-	/**
-	 *
-	 * @param list
-	 * @return tabMinMeanMax[0] MIN
-	 * 						[1] AVG
-	 * 						[2] MAX
-	 * 						[3] CURRENT
-	 */
-	private float[] findMinMoyMax(List<MeteoEvent> list)
-		{
-		float[] tabMinMeanMax = new float[4];
-
-		tabMinMeanMax[0] = list.get(0).getValue();
-		tabMinMeanMax[2] = list.get(0).getValue();
-		float somme = 0;
-
-		for(MeteoEvent event:list)
+		slideTemp = panelTemperature.getSlider();
+		slideTemp.addChangeListener(new ChangeListener()
 			{
-			//System.out.println(event.getValue() + " ");
 
-			if (event.getValue() < tabMinMeanMax[0])
-				{
-				tabMinMeanMax[0] = event.getValue();
-				}
+				@Override
+				public void stateChanged(ChangeEvent e)
+					{
+					try
+						{
+						 meteoOptions = afficheurServiceMOO.getMeteoServiceOptions();
+						meteoOptions.setTemperatureDT(slideTemp.getValue());
+						afficheurServiceMOO.setMeteoServiceOptions(meteoOptions);
 
-			if (event.getValue() > tabMinMeanMax[2])
-				{
-				tabMinMeanMax[2] = event.getValue();
-				}
-			tabMinMeanMax[3] = event.getValue();
+						}
+					catch (RemoteException e1)
+						{
+						// TODO Auto-generated catch block
+						e1.printStackTrace();
+						}
+					}
+			});
 
-			somme += event.getValue();
+		slidPres = panelPression.getSlider();
+		slidPres.addChangeListener(new ChangeListener()
+			{
 
-			}
+				@Override
+				public void stateChanged(ChangeEvent e)
+					{
+					try
+						{
+						meteoOptions = afficheurServiceMOO.getMeteoServiceOptions();
+						meteoOptions.setPressionDT(slidPres.getValue());
+						afficheurServiceMOO.setMeteoServiceOptions(meteoOptions);
 
-		tabMinMeanMax[1] = somme / list.size();
+						}
+					catch (RemoteException e1)
+						{
+						// TODO Auto-generated catch block
+						e1.printStackTrace();
+						}
+					}
+			});
 
-		return tabMinMeanMax;
+		slidAlt = panelAltitude.getSlider();
+		slidAlt.addChangeListener(new ChangeListener()
+			{
+
+				@Override
+				public void stateChanged(ChangeEvent e)
+					{
+					try
+						{
+						meteoOptions = afficheurServiceMOO.getMeteoServiceOptions();
+						meteoOptions.setAltitudeDT(slidAlt.getValue());
+						afficheurServiceMOO.setMeteoServiceOptions(meteoOptions);
+
+						}
+					catch (RemoteException e1)
+						{
+						// TODO Auto-generated catch block
+						e1.printStackTrace();
+						}
+					}
+			});
+
 		}
 
-	private void reduceListSize(List<MeteoEvent> list, MeteoEvent event)
+	public void updateSliderValue()
 		{
-
-		while(list.size() >= N)
+		Thread t1 = new Thread(new Runnable()
 			{
-			list.remove(0);
-			}
 
-		list.add(event);
+				@Override
+				public void run()
+					{
+					JSlider slideTemp = panelTemperature.getSlider();
+					JSlider slidPres = panelPression.getSlider();
+					JSlider slideAlt = panelAltitude.getSlider();
+
+					while(true)
+						{
+
+						try
+							{
+							slideTemp.setValue((int)afficheurServiceMOO.getMeteoServiceOptions().getTemperatureDT());
+							slidPres.setValue((int)afficheurServiceMOO.getMeteoServiceOptions().getPressionDT());
+							slideAlt.setValue((int)afficheurServiceMOO.getMeteoServiceOptions().getAltitudeDT());
+							System.out.println((int)afficheurServiceMOO.getMeteoServiceOptions().getTemperatureDT());
+							}
+						catch (RemoteException e1)
+							{
+							// TODO Auto-generated catch block
+							e1.printStackTrace();
+							}
+
+						try
+							{
+							Thread.sleep(3000);
+							}
+						catch (InterruptedException e)
+							{
+							// TODO Auto-generated catch block
+							e.printStackTrace();
+							} //disons
+						}
+					}
+			});
+		t1.start();
+
 		}
 
 	/*------------------------------*\
@@ -202,7 +237,13 @@ public class JPanelAffichage extends JPanel implements AfficheurService_I
 	private List<MeteoEvent> listAltitude;
 	private List<MeteoEvent> listPression;
 	private List<MeteoEvent> listTemperature;
-	private float[] tabMinMoyMax;
+	private JSlider slidAlt;
+	private JSlider slidPres;
+	private JSlider slideTemp;
+	private MeteoServiceOptions meteoOptions;
+
+
 	private static final int N = 30;
+	private AfficheurServiceMOO afficheurServiceMOO;
 
 	}

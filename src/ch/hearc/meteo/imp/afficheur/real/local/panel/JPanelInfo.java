@@ -17,14 +17,21 @@ import javax.swing.JSlider;
 import javax.swing.event.ChangeEvent;
 import javax.swing.event.ChangeListener;
 
+import ch.hearc.meteo.imp.afficheur.real.local.ImageLoader;
+import ch.hearc.meteo.imp.afficheur.real.manage.AfficheurServiceMOO;
+import ch.hearc.meteo.imp.afficheur.real.manage.Stat;
+import ch.hearc.meteo.imp.afficheur.simulateur.vue.atome.MathTools;
+
 public class JPanelInfo extends JPanel
 	{
 
 	/*------------------------------------------------------------------*\
 	|*							Constructeurs							*|
 	\*------------------------------------------------------------------*/
-	JPanelInfo(String titre, String unite)
+	JPanelInfo(String titre, String unite, Stat stat, AfficheurServiceMOO afficheurServiceMOO)
 		{
+		this.afficheurServiceMOO = afficheurServiceMOO;
+		this.stat = stat;
 		this.titre = titre;
 		this.unite = unite;
 		geometry();
@@ -36,14 +43,12 @@ public class JPanelInfo extends JPanel
 	|*							Methodes Public							*|
 	\*------------------------------------------------------------------*/
 
-	public void refresh()
+	public void update()
 		{
-		this.labelValue.setText(decimalFormat.format(value) + " " + unite);
-		this.labelMaxValue.setText("maximum : " + decimalFormat.format(maxValue) + " " + unite);
-		this.labelMinValue.setText("minimum : " + decimalFormat.format(minValue) + " " + unite);
-		this.labelMeanValue.setText("moyenne : " + decimalFormat.format(moyValue) + " " + unite);
-		revalidate();
-		repaint();
+		this.labelValue.setText(MathTools.arrondir(stat.getLast()) + " " + unite);
+		this.labelMaxValue.setText("maximum : " + MathTools.arrondir(stat.getMax()) + " " + unite);
+		this.labelMinValue.setText("minimum : " + MathTools.arrondir(stat.getMin()) + " " + unite);
+		this.labelMeanValue.setText("moyenne : " + MathTools.arrondir(stat.getMoy()) + " " + unite);
 
 		}
 
@@ -51,43 +56,28 @@ public class JPanelInfo extends JPanel
 	|*				Set				*|
 	\*------------------------------*/
 
-	public void setMinValue(float minValue)
-		{
-		this.minValue = minValue;
-		}
-
-	public void setMaxValue(float maxValue)
-		{
-		this.maxValue = maxValue;
-		}
-
-	public void setMoyValue(float moyValue)
-		{
-		this.moyValue = moyValue;
-		}
-
-	public void setValue(float value)
-		{
-		this.value = value;
-		}
-
 	public void setEnableSlider(boolean enable)
 		{
 		this.sliderTime.setEnabled(enable);
+		}
+
+	public void setSliderValue(int value)
+		{
+		this.sliderTime.setValue(value);
 		}
 
 	/*------------------------------*\
 	|*				Get				*|
 	\*------------------------------*/
 
-	public int getSliderTimeValue()
+	public int getSliderValue()
 		{
 		return this.sliderTime.getValue();
 		}
 
-	public void setSliderTimeValue(int value)
+	public JSlider getSlider()
 		{
-		this.sliderTime.setValue(value);
+		return this.sliderTime;
 		}
 
 	/*------------------------------------------------------------------*\
@@ -103,8 +93,10 @@ public class JPanelInfo extends JPanel
 				public void stateChanged(ChangeEvent e)
 					{
 					labelEchant.setText("dt = " + decimalFormat.format(sliderTime.getValue() / 1000.0) + " s");
+
 					}
 			});
+
 		}
 
 	private void apparance()
@@ -114,15 +106,15 @@ public class JPanelInfo extends JPanel
 		sliderTime.setPreferredSize(new Dimension(100, 30));
 		sliderTime.setMinimum(100);
 		sliderTime.setMaximum(10000);
-		//setBackground(UIManager.getColor("Button.background"));
 
 		}
 
 	@Override
 	public void paintComponent(Graphics g)
 		{
-		bg = new ImageIcon("/backgroundcarree.png").getImage();
-		g.drawImage(bg, 0, 0, getWidth(), getHeight(), this);
+		super.paintComponent(g);
+		final ImageIcon bg = ImageLoader.loadSynchroneJar("ressources/backgroundcarree.png");
+		g.drawImage(bg.getImage(), 0, 0, getWidth(), getHeight(), this);
 		}
 
 	private void geometry()
@@ -178,12 +170,9 @@ public class JPanelInfo extends JPanel
 	private JLabel labelEchant;
 	private JSlider sliderTime;
 
-	private float value;
-	private float minValue;
-	private float maxValue;
-	private float moyValue;
-
 	private NumberFormat decimalFormat;
+	private Stat stat;
+	private AfficheurServiceMOO afficheurServiceMOO;
 
 	private Box boxV;
 	private Box boxH;

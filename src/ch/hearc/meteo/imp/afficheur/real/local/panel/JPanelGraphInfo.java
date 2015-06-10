@@ -2,73 +2,55 @@
 package ch.hearc.meteo.imp.afficheur.real.local.panel;
 
 import java.awt.BorderLayout;
+import java.util.List;
 
 import javax.swing.BorderFactory;
 import javax.swing.Box;
 import javax.swing.JPanel;
+import javax.swing.JSlider;
 import javax.swing.border.TitledBorder;
 
-import ch.hearc.meteo.spec.afficheur.AfficheurService_I;
-import ch.hearc.meteo.spec.com.meteo.MeteoServiceOptions;
+import ch.hearc.meteo.imp.afficheur.real.manage.AfficheurServiceMOO;
+import ch.hearc.meteo.imp.afficheur.real.manage.Stat;
 import ch.hearc.meteo.spec.com.meteo.listener.event.MeteoEvent;
 
-public class JPanelGraphInfo extends JPanel implements AfficheurService_I
+public class JPanelGraphInfo extends JPanel
 	{
 
 	/*------------------------------------------------------------------*\
 	|*							Constructeurs							*|
 	\*------------------------------------------------------------------*/
 
-	public JPanelGraphInfo(String titre, String unite)
+	public JPanelGraphInfo(String titre, String unite, Stat stat, List<MeteoEvent> list, AfficheurServiceMOO afficheurServiceMOO)
 		{
+		this.afficheurServiceMOO = afficheurServiceMOO;
+		this.stat = stat;
+		this.list = list;
 		this.titre = titre;
 		this.unite = unite;
+
 		geometry();
+
 		control();
 		apparance();
-
 		}
 
 	/*------------------------------------------------------------------*\
 	|*							Methodes Public							*|
 	\*------------------------------------------------------------------*/
-
-	public JPanelInfo getPanelDigital()
+	public void update()
 		{
-		return this.panelDigital;
+		panelInfo.update();
+		}
+
+	public JPanelInfo getPanelGraphInfo()
+		{
+		return this.panelInfo;
 		}
 
 	public JPanelGraph getPanelGraph()
 		{
 		return this.panelGraph;
-		}
-
-	@Override
-	public void printPression(MeteoEvent event)
-		{
-		panelGraph.printPression(event);
-
-		}
-
-	@Override
-	public void printAltitude(MeteoEvent event)
-		{
-		panelGraph.printAltitude(event);
-
-		}
-
-	@Override
-	public void printTemperature(MeteoEvent event)
-		{
-		panelGraph.printTemperature(event);
-
-		}
-
-	@Override
-	public void updateMeteoServiceOptions(MeteoServiceOptions meteoServiceOptions)
-		{
-		// TODO Auto-generated method stub
-
 		}
 
 	/*------------------------------------------------------------------*\
@@ -77,39 +59,64 @@ public class JPanelGraphInfo extends JPanel implements AfficheurService_I
 
 	private void geometry()
 		{
-		panelDigital = new JPanelInfo(titre, unite);
-		panelGraph = new JPanelGraph(titre, unite);
+
+		panelInfo = new JPanelInfo(titre, unite, stat, afficheurServiceMOO);
+		panelGraph = new JPanelGraph(titre, unite, stat, list, afficheurServiceMOO);
 		BorderLayout borderLayout = new BorderLayout();
 		borderLayout.setHgap(5);
 		setLayout(borderLayout);
 
 		TitledBorder border = BorderFactory.createTitledBorder("");
-		panelDigital.setBorder(border);
+		panelInfo.setBorder(border);
 
 		add(panelGraph, BorderLayout.CENTER);
-		add(panelDigital, BorderLayout.EAST);
+		add(panelInfo, BorderLayout.EAST);
 		add(Box.createHorizontalStrut(1), BorderLayout.WEST);
 		}
 
 	private void control()
 		{
-		//rien
+
 		}
 
 	private void apparance()
 		{
 		//Rien
 
-
 		}
+
+	/*------------------------------*\
+	|*				Get				*|
+	\*------------------------------*/
+
+	public int getSliderValue()
+		{
+		return panelInfo.getSliderValue();
+		}
+
+	public JSlider getSlider()
+		{
+		return panelInfo.getSlider();
+		}
+
+	/*------------------------------*\
+	|*				Set				*|
+	\*------------------------------*/
+	public void setSliderValue(int value)
+	{
+	panelInfo.setSliderValue(value);
+	}
 
 	/*------------------------------------------------------------------*\
 	|*							Attributs Private						*|
 	\*------------------------------------------------------------------*/
 
 	//Tools
-	private JPanelInfo panelDigital;
+	private JPanelInfo panelInfo;
 	private JPanelGraph panelGraph;
+	private List<MeteoEvent> list;
+	private Stat stat;
+	private AfficheurServiceMOO afficheurServiceMOO;
 
 	//Input
 	private String titre;

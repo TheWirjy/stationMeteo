@@ -26,7 +26,7 @@ public class UseJFrameMeteoCentral
 			{
 			e.printStackTrace();
 			}
-		new JFrameMeteoCentral();
+		//new JFrameMeteoCentral();
 		}
 
 	/*------------------------------------------------------------------*\

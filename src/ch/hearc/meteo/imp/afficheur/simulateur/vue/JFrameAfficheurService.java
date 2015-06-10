@@ -55,8 +55,8 @@ public class JFrameAfficheurService extends JFrame
 		{
 		setTitle(afficheurServiceMOO.getTitre());
 
-		setSize(500, 550);
-		setResizable(false);
+		setSize(600, 550);
+		setResizable(true);
 		setVisible(true);
 		}
 

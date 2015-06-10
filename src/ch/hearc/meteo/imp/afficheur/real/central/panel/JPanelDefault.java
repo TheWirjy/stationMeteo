@@ -2,6 +2,7 @@
 package ch.hearc.meteo.imp.afficheur.real.central.panel;
 
 import java.awt.FlowLayout;
+import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.Map;
 import java.util.Map.Entry;
@@ -12,18 +13,26 @@ import org.jxmapviewer.viewer.GeoPosition;
 
 import ch.hearc.meteo.imp.afficheur.real.central.ComSim.SimulationStations;
 import ch.hearc.meteo.imp.afficheur.real.central.geoloc.TabGeoLoc;
+import ch.hearc.meteo.imp.afficheur.real.manage.AfficheurServiceMOO;
 
 public class JPanelDefault extends JPanel
 	{
 
-	public JPanelDefault()
+	public JPanelDefault(AfficheurServiceMOO afficheurServiceMOO)
 		{
+		this.afficheurServiceMOO = afficheurServiceMOO;
 		tabPanelMini = new JPanelMini[SimulationStations.getNombreDeStation()];
 		setLayout(new FlowLayout());
 
 		update();
 
 		}
+
+	public void updateStation(AfficheurServiceMOO afficheurServiceMOO)
+	{
+	listPanelMini.add(new JPanelTestMini(afficheurServiceMOO));
+
+	}
 
 	public void update()
 		{
@@ -47,5 +56,7 @@ public class JPanelDefault extends JPanel
 		}
 
 	private JPanelMini[] tabPanelMini;
+	private ArrayList<JPanelTestMini> listPanelMini;
+	private AfficheurServiceMOO afficheurServiceMOO;
 
 	}
