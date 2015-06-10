@@ -2,9 +2,12 @@
 package ch.hearc.meteo.imp.afficheur.real;
 
 import java.awt.BorderLayout;
+import java.util.List;
 
 import javax.swing.JComboBox;
 import javax.swing.JFrame;
+
+import ch.hearc.meteo.imp.com.real.MeteoPortDetectionService;
 
 public class JFramePort extends JFrame
 	{
@@ -39,8 +42,16 @@ public class JFramePort extends JFrame
 	private void geometry()
 		{
 			// JComponent : Instanciation
-			JComboBox<String> combo = new JComboBox<>();
+			JComboBox<String> combo = new JComboBox<String>();
 
+			MeteoPortDetectionService meteoPort = new MeteoPortDetectionService();
+			List<String> listPort = meteoPort.findListPortMeteo();
+
+			for(String string:listPort)
+				{
+				combo.addItem(string);
+				System.out.println(string);
+				}
 			// Layout : Specification
 			{
 			BorderLayout borderLayout = new BorderLayout();
@@ -51,7 +62,7 @@ public class JFramePort extends JFrame
 			}
 
 		// JComponent : add
-		//add(TODO,BorderLayout.CENTER);
+		add(combo,BorderLayout.CENTER);
 		}
 
 	private void control()
@@ -61,7 +72,7 @@ public class JFramePort extends JFrame
 
 	private void appearance()
 		{
-		setSize(600, 400);
+		setSize(300, 100);
 		setLocationRelativeTo(null); // frame centrer
 		setVisible(true); // last!
 		}
