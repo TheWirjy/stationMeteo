@@ -32,7 +32,8 @@ public class JPanelTestMini extends JPanel
 
 				Boolean swap = false;
 
-				@Override public void mousePressed(MouseEvent e)
+				@Override
+				public void mousePressed(MouseEvent e)
 					{
 					if (swap == false)
 						{
@@ -56,25 +57,26 @@ public class JPanelTestMini extends JPanel
 		lblLocation.setFont(new Font("Calibri", Font.PLAIN, 10));
 		add(lblLocation);
 
-		lblTemperature = new JLabel("Temp\u00E9rature : "+afficheurServiceMOO.getStatTemperature().getLast());
+		lblTemperature = new JLabel("Temp\u00E9rature : " + afficheurServiceMOO.getStatTemperature().getLast());
 		lblTemperature.setFont(new Font("Calibri", Font.PLAIN, 10));
 		add(lblTemperature);
 
-		lblPression = new JLabel("Pression :"+afficheurServiceMOO.getStatPression().getLast());
+		lblPression = new JLabel("Pression :" + afficheurServiceMOO.getStatPression().getLast());
 		lblPression.setFont(new Font("Calibri", Font.PLAIN, 10));
 		add(lblPression);
 
-		lblALtitude = new JLabel("Altitude : "+afficheurServiceMOO.getStatAltitude().getLast());
+		lblALtitude = new JLabel("Altitude : " + afficheurServiceMOO.getStatAltitude().getLast());
 		lblALtitude.setFont(new Font("Calibri", Font.PLAIN, 10));
 		add(lblALtitude);
 		}
 
 	public void refresh()
-	{
-	lblTemperature.setText("Temp\u00E9rature : "+afficheurServiceMOO.getStatTemperature().getLast());
-	lblPression.setText("Temp\u00E9rature : "+afficheurServiceMOO.getStatTemperature().getLast());
-	lblALtitude.setText("Temp\u00E9rature : "+afficheurServiceMOO.getStatTemperature().getLast());
-	}
+		{
+		System.out.println("val:" + afficheurServiceMOO.getStatTemperature().getLast());
+		lblTemperature.setText("Temp\u00E9rature : " + afficheurServiceMOO.getStatTemperature().getLast());
+		lblPression.setText("Pression : " + afficheurServiceMOO.getStatPression().getLast());
+		lblALtitude.setText("Altitude : " + afficheurServiceMOO.getStatAltitude().getLast());
+		}
 
 	private JPanelTestMini panelTestMini;
 	private JLabel lblLocation;
@@ -82,6 +84,7 @@ public class JPanelTestMini extends JPanel
 	private JLabel lblPression;
 	private JLabel lblALtitude;
 	private AfficheurServiceMOO afficheurServiceMOO;
+
 	public Boolean isSelected()
 		{
 		return isSelected;
