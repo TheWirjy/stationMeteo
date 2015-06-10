@@ -20,6 +20,7 @@ public class JPanelDefault extends JPanel
 
 	public JPanelDefault(AfficheurServiceMOO afficheurServiceMOO)
 		{
+
 		this.afficheurServiceMOO = afficheurServiceMOO;
 		tabPanelMini = new JPanelMini[SimulationStations.getNombreDeStation()];
 		setLayout(new FlowLayout());
@@ -28,11 +29,10 @@ public class JPanelDefault extends JPanel
 
 		}
 
-	public void updateStation(AfficheurServiceMOO afficheurServiceMOO)
-	{
-	listPanelMini.add(new JPanelTestMini(afficheurServiceMOO));
-
-	}
+	public void addStation(AfficheurServiceMOO afficheurServiceMOO)
+		{
+		listPanelMini.add(new JPanelTestMini(afficheurServiceMOO));
+		}
 
 	public void update()
 		{
@@ -41,13 +41,20 @@ public class JPanelDefault extends JPanel
 		removeAll();
 		revalidate();
 		repaint();
-		for(int i = 1; i <= SimulationStations.getNombreDeStation(); i++)
+		//		for(int i = 1; i <= SimulationStations.getNombreDeStation(); i++)
+		//			{
+		//			//JPanelMini panelMini= new JPanelMini(i);
+		//			String stationName = iterator.next().getKey();
+		//			tabPanelMini[i - 1] = new JPanelMini(i, stationName);
+		//			add(tabPanelMini[i - 1]);
+		//			}
+		listPanelMini.clear();
+
+		for(JPanelTestMini jPanelTestMini:listPanelMini)
 			{
-			//JPanelMini panelMini= new JPanelMini(i);
-			String stationName = iterator.next().getKey();
-			tabPanelMini[i - 1] = new JPanelMini(i, stationName);
-			add(tabPanelMini[i - 1]);
+			add(jPanelTestMini);
 			}
+
 		}
 
 	public JPanelMini[] getTabPanelMini()

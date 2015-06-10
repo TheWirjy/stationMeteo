@@ -17,17 +17,27 @@ import ch.hearc.meteo.imp.afficheur.real.central.panel.JPanelDefault;
 import ch.hearc.meteo.imp.afficheur.real.central.panel.JPanelListMap;
 import ch.hearc.meteo.imp.afficheur.real.central.panel.JPanelMap;
 import ch.hearc.meteo.imp.afficheur.real.manage.AfficheurServiceMOO;
+import ch.hearc.meteo.spec.com.meteo.MeteoServiceOptions;
 
 public class JFrameMeteoCentral extends JFrame
 	{
 
-	public JFrameMeteoCentral(AfficheurServiceMOO afficheurServiceMOO)
+	private JFrameMeteoCentral()
 		{
-		this.afficheurServiceMOO = afficheurServiceMOO;
+
 		geometry();
 		control();
 		appearance();
 		}
+
+	public static JFrameMeteoCentral getInstance()
+	{
+	if(frameMeteoCentral==null)
+		{
+		new JFrameMeteoCentral();
+		}
+		return frameMeteoCentral;
+	}
 
 	private void geometry()
 		{
@@ -38,7 +48,7 @@ public class JFrameMeteoCentral extends JFrame
 		JTabbedPane tabbedPane = new JTabbedPane(SwingConstants.TOP);
 		panelOnglet.add(tabbedPane, BorderLayout.CENTER);
 
-		panelDefaultTabbed = new JPanelDefaultafficheurServiceMOO();
+		panelDefaultTabbed = new JPanelDefault(afficheurServiceMOO);
 		tabbedPane.addTab("Default", null, panelDefaultTabbed, null);
 
 		JPanel panelMapTabbed = new JPanel();
@@ -68,8 +78,8 @@ public class JFrameMeteoCentral extends JFrame
 		JButton JButtonTest = new JButton("test");
 		JButtonTest.addActionListener(new ActionListener()
 			{
-				@Override
-				public void actionPerformed(ActionEvent e)
+
+				@Override public void actionPerformed(ActionEvent e)
 					{
 					JFrameMeteoCentral.this.panelDefaultTabbed.update();
 					}
@@ -83,6 +93,11 @@ public class JFrameMeteoCentral extends JFrame
 		setDefaultCloseOperation(EXIT_ON_CLOSE);
 		}
 
+	public void addStation(AfficheurServiceMOO afficheurServiceMOO)
+		{
+		panelDefaultTabbed.addStation(afficheurServiceMOO);
+		}
+
 	private void appearance()
 		{
 		setSize(600, 400);
@@ -90,7 +105,18 @@ public class JFrameMeteoCentral extends JFrame
 		setVisible(true); // last!
 		}
 
+	public void refresh()
+		{
+		panelDefaultTabbed.update();
+		}
+
+	public void updateMeteoServiceOptions(MeteoServiceOptions meteoServiceOptions)
+		{
+		//panelDefaultTabbed.updateMeteoServiceOptions( meteoServiceOptions);
+		}
+
 	private JPanelDefault panelDefaultTabbed;
 	private AfficheurServiceMOO afficheurServiceMOO;
+	private  static JFrameMeteoCentral frameMeteoCentral;
 
 	}
