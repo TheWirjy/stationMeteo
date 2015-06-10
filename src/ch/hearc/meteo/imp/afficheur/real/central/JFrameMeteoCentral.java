@@ -38,7 +38,7 @@ public class JFrameMeteoCentral extends JFrame
 		JTabbedPane tabbedPane = new JTabbedPane(SwingConstants.TOP);
 		panelOnglet.add(tabbedPane, BorderLayout.CENTER);
 
-		panelDefaultTabbed = new JPanelDefaultafficheurServiceMOO);
+		panelDefaultTabbed = new JPanelDefaultafficheurServiceMOO();
 		tabbedPane.addTab("Default", null, panelDefaultTabbed, null);
 
 		JPanel panelMapTabbed = new JPanel();

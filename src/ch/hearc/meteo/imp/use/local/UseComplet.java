@@ -1,7 +1,7 @@
 
 package ch.hearc.meteo.imp.use.local;
 
-import ch.hearc.meteo.imp.afficheur.real.local.AfficheurRealFactory;
+import ch.hearc.meteo.imp.afficheur.real.manage.AfficheurSimulateurFactory;
 import ch.hearc.meteo.imp.com.logique.MeteoServiceCallback_I;
 import ch.hearc.meteo.imp.com.real.MeteoService;
 import ch.hearc.meteo.imp.com.real.com.ComConnexion;
@@ -39,7 +39,7 @@ public class UseComplet
 
 	public static void main() throws MeteoServiceException
 		{
-		String portName = "COM8";
+		String portName = "COM4";
 		//MeteoService_I meteoService = (new MeteoServiceSimulatorFactory()).create(portName);
 		ComOption comOption = new ComOption();
 		ComConnexion comConnexion=new ComConnexion(portName,  comOption );
@@ -60,7 +60,7 @@ public class UseComplet
 
 		String titre = RmiTools.getLocalHost() + " " + meteoService.getPort();
 		AffichageOptions affichageOption = new AffichageOptions(3, titre);
-		AfficheurService_I afficheurService1 = (new AfficheurRealFactory()).createOnLocalPC(affichageOption, meteoServiceWrapper);
+		AfficheurService_I afficheurService1 = (new AfficheurSimulateurFactory()).createOnLocalPC(affichageOption, meteoServiceWrapper);
 
 		use(meteoService, afficheurService1);
 		}

@@ -150,7 +150,6 @@ public class ComConnexion implements ComConnexions_I
 	@Override
 	public void connect() throws Exception
 		{
-		portName = "COM8";
 
 		CommPortIdentifier portId = CommPortIdentifier.getPortIdentifier(this.portName);
 		serialPort = (SerialPort)portId.open(portName, 1000);

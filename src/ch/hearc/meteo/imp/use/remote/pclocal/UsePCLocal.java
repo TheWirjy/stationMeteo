@@ -29,7 +29,7 @@ public class UsePCLocal
 		try
 			{
 
-			String strIp = System.getProperty("ip", "127.0.0.1");
+			String strIp = System.getProperty("ip", "157.26.110.116");
 			InetAddress ip = InetAddress.getByName(strIp);
 
 			RmiURL rmiUrl = new RmiURL(RemoteAfficheurCreator.RMI_ID, ip, RmiTools.PORT_RMI_DEFAUT);
