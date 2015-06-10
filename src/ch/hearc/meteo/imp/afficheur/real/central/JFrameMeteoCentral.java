@@ -95,6 +95,7 @@ public class JFrameMeteoCentral extends JFrame
 
 	public void addStation(AfficheurServiceMOO afficheurServiceMOO)
 		{
+		//javax.swing.JOptionPane.showMessageDialog(null,"marche");
 		panelDefaultTabbed.addStation(afficheurServiceMOO);
 		}
 
@@ -107,8 +108,14 @@ public class JFrameMeteoCentral extends JFrame
 
 	public void refresh()
 		{
-		//panelDefaultTabbed.update();
+		panelDefaultTabbed.update();
 		}
+
+
+	public void refresh2()
+	{
+	panelDefaultTabbed.refresh();
+	}
 
 	public void updateMeteoServiceOptions(MeteoServiceOptions meteoServiceOptions)
 		{

@@ -20,7 +20,8 @@ public class JPanelTestMini extends JPanel
 
 	public JPanelTestMini(AfficheurServiceMOO afficheurServiceMOO)
 		{
-
+		this.afficheurServiceMOO = afficheurServiceMOO;
+		System.out.println("testmini");
 		TitledBorder titlesborder = BorderFactory.createTitledBorder("Station ");
 		//titlesborder.setTitleColor(Color.blue);
 		titlesborder.setTitleFont(new Font("Calibri", Font.BOLD, 13));
@@ -51,25 +52,36 @@ public class JPanelTestMini extends JPanel
 			});
 		setLayout(new GridLayout(0, 1, 0, 0));
 
-		JLabel lblLocation = new JLabel("Location : ");
+		lblLocation = new JLabel("Location : ");
 		lblLocation.setFont(new Font("Calibri", Font.PLAIN, 10));
 		add(lblLocation);
 
-		JLabel lblTemperature = new JLabel("Temp\u00E9rature : "+afficheurServiceMOO.getStatTemperature().getLast());
+		lblTemperature = new JLabel("Temp\u00E9rature : "+afficheurServiceMOO.getStatTemperature().getLast());
 		lblTemperature.setFont(new Font("Calibri", Font.PLAIN, 10));
 		add(lblTemperature);
 
-		JLabel lblPression = new JLabel("Pression :"+afficheurServiceMOO.getStatPression().getLast());
+		lblPression = new JLabel("Pression :"+afficheurServiceMOO.getStatPression().getLast());
 		lblPression.setFont(new Font("Calibri", Font.PLAIN, 10));
 		add(lblPression);
 
-		JLabel lblNewLabel_2 = new JLabel("Altitude : "+afficheurServiceMOO.getStatAltitude().getLast());
-		lblNewLabel_2.setFont(new Font("Calibri", Font.PLAIN, 10));
-		add(lblNewLabel_2);
+		lblALtitude = new JLabel("Altitude : "+afficheurServiceMOO.getStatAltitude().getLast());
+		lblALtitude.setFont(new Font("Calibri", Font.PLAIN, 10));
+		add(lblALtitude);
 		}
 
-	private JPanelTestMini panelTestMini;
+	public void refresh()
+	{
+	lblTemperature.setText("Temp\u00E9rature : "+afficheurServiceMOO.getStatTemperature().getLast());
+	lblPression.setText("Temp\u00E9rature : "+afficheurServiceMOO.getStatTemperature().getLast());
+	lblALtitude.setText("Temp\u00E9rature : "+afficheurServiceMOO.getStatTemperature().getLast());
+	}
 
+	private JPanelTestMini panelTestMini;
+	private JLabel lblLocation;
+	private JLabel lblTemperature;
+	private JLabel lblPression;
+	private JLabel lblALtitude;
+	private AfficheurServiceMOO afficheurServiceMOO;
 	public Boolean isSelected()
 		{
 		return isSelected;

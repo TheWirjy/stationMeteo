@@ -33,19 +33,19 @@ public class AfficheurServiceCentral implements AfficheurService_I
 	@Override public void printAltitude(MeteoEvent event)
 		{
 		afficheurServiceMOO.printAltitude(event);
-		//jFrameMeteoCentral.refresh();
+		jFrameMeteoCentral.refresh2();
 		}
 
 	@Override public void printTemperature(MeteoEvent event)
 		{
 		afficheurServiceMOO.printTemperature(event);
-		//jFrameMeteoCentral.refresh();
+		jFrameMeteoCentral.refresh2();
 		}
 
 	@Override public void printPression(MeteoEvent event)
 		{
 		afficheurServiceMOO.printPression(event);
-		//jFrameMeteoCentral.refresh();
+		jFrameMeteoCentral.refresh2();
 		}
 
 	/*------------------------------*\
