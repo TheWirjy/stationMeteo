@@ -30,11 +30,11 @@ public class JFrameMeteoCentral extends JFrame
 		appearance();
 		}
 
-	public static JFrameMeteoCentral getInstance()
+	public synchronized static JFrameMeteoCentral getInstance()
 	{
 	if(frameMeteoCentral==null)
 		{
-		new JFrameMeteoCentral();
+		frameMeteoCentral = new JFrameMeteoCentral();
 		}
 		return frameMeteoCentral;
 	}
@@ -48,7 +48,7 @@ public class JFrameMeteoCentral extends JFrame
 		JTabbedPane tabbedPane = new JTabbedPane(SwingConstants.TOP);
 		panelOnglet.add(tabbedPane, BorderLayout.CENTER);
 
-		panelDefaultTabbed = new JPanelDefault(afficheurServiceMOO);
+		panelDefaultTabbed = new JPanelDefault();
 		tabbedPane.addTab("Default", null, panelDefaultTabbed, null);
 
 		JPanel panelMapTabbed = new JPanel();
@@ -107,7 +107,7 @@ public class JFrameMeteoCentral extends JFrame
 
 	public void refresh()
 		{
-		panelDefaultTabbed.update();
+		//panelDefaultTabbed.update();
 		}
 
 	public void updateMeteoServiceOptions(MeteoServiceOptions meteoServiceOptions)

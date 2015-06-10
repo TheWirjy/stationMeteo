@@ -37,7 +37,7 @@ public class UsePCLocal
 			MeteoServiceOptions meteoServiceOptions = new MeteoServiceOptions(800, 1000, 1200);
 			AffichageOptions affichageOptions = new AffichageOptions(3, "");
 
-			String portCom = "COM1";
+			String portCom = "COM4";
 			PCLocal pc = new PCLocal(meteoServiceOptions, portCom, affichageOptions, rmiUrl);
 			pc.run();
 

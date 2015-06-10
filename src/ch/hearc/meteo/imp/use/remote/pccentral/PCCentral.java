@@ -3,6 +3,7 @@ package ch.hearc.meteo.imp.use.remote.pccentral;
 
 import java.rmi.RemoteException;
 
+import ch.hearc.meteo.imp.afficheur.real.central.JFrameMeteoCentral;
 import ch.hearc.meteo.imp.reseau.RemoteAfficheurCreator;
 import ch.hearc.meteo.imp.use.remote.PC_I;
 
@@ -35,6 +36,7 @@ public class PCCentral implements PC_I
 		{
 		try
 			{
+			JFrameMeteoCentral.getInstance();
 			RemoteAfficheurCreator.getInstance();
 			}
 		catch (RemoteException e)
