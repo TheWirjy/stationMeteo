@@ -2,8 +2,13 @@
 package ch.hearc.meteo.imp.afficheur.real;
 
 import java.awt.BorderLayout;
+import java.awt.FlowLayout;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
 import java.util.List;
 
+import javax.swing.Box;
+import javax.swing.JButton;
 import javax.swing.JComboBox;
 import javax.swing.JFrame;
 
@@ -18,9 +23,11 @@ public class JFramePort extends JFrame
 
 	public JFramePort()
 		{
+		this.meteoPort = new MeteoPortDetectionService();
 		geometry();
 		control();
 		appearance();
+		refreshList();
 		}
 
 	/*------------------------------------------------------------------*\
@@ -30,7 +37,6 @@ public class JFramePort extends JFrame
 	/*------------------------------*\
 	|*				Set				*|
 	\*------------------------------*/
-
 	/*------------------------------*\
 	|*				Get				*|
 	\*------------------------------*/
@@ -39,40 +45,80 @@ public class JFramePort extends JFrame
 	|*							Methodes Private						*|
 	\*------------------------------------------------------------------*/
 
+	private void refreshList()
+	{
+		this.combo.removeAllItems();
+		this.listPort = meteoPort.findListPortSerie();
+		for(String string:listPort)
+			{
+			combo.addItem(string);
+			}
+	}
+
 	private void geometry()
 		{
 			// JComponent : Instanciation
-			JComboBox<String> combo = new JComboBox<String>();
+			combo = new JComboBox<String>();
+			buttonValider = new JButton("Valider");
+			button_refresh = new JButton("Refresh");
 
-			MeteoPortDetectionService meteoPort = new MeteoPortDetectionService();
-			List<String> listPort = meteoPort.findListPortMeteo();
+			Box layout2 = Box.createHorizontalBox();
+			layout2.add(combo);
 
-			for(String string:listPort)
-				{
-				combo.addItem(string);
-				System.out.println(string);
-				}
+			Box layoutVertical = Box.createVerticalBox();
+
+			Box layout = Box.createHorizontalBox();
+			layout.add(buttonValider);
+			layout.add(button_refresh);
+			layoutVertical.add(Box.createVerticalStrut(10));
+			layoutVertical.add(layout2);
+			layoutVertical.add(Box.createVerticalStrut(10));
+			layoutVertical.add(layout);
+
 			// Layout : Specification
 			{
 			BorderLayout borderLayout = new BorderLayout();
-			setLayout(borderLayout);
+			setLayout(new FlowLayout(FlowLayout.CENTER));
 
 			// borderLayout.setHgap(20);
 			// borderLayout.setVgap(20);
 			}
 
 		// JComponent : add
-		add(combo,BorderLayout.CENTER);
+		//add(combo,BorderLayout.CENTER);
+		add(layoutVertical);
 		}
 
 	private void control()
 		{
+		buttonValider.addActionListener(new ActionListener()
+			{
+
+				@Override
+				public void actionPerformed(ActionEvent e)
+					{
+					// TODO Auto-generated method stub
+					System.out.println("ouvre frame");
+					}
+			});
+
+		button_refresh.addActionListener(new ActionListener()
+			{
+
+				@Override
+				public void actionPerformed(ActionEvent e)
+					{
+					// TODO Auto-generated method stub
+					refreshList();
+					}
+			});
+
 		setDefaultCloseOperation(EXIT_ON_CLOSE);
 		}
 
 	private void appearance()
 		{
-		setSize(300, 100);
+		setSize(200, 130);
 		setLocationRelativeTo(null); // frame centrer
 		setVisible(true); // last!
 		}
@@ -82,7 +128,10 @@ public class JFramePort extends JFrame
 	\*------------------------------------------------------------------*/
 
 	// Tools
-
-
+	private JComboBox<String> combo;
+	private JButton buttonValider;
+	private JButton button_refresh;
+	private MeteoPortDetectionService meteoPort;
+	private List<String> listPort;
 	}
 
