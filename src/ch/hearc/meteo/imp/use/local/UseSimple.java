@@ -34,8 +34,8 @@ public class UseSimple
 		{
 		//MeteoService_I meteoService = (new MeteoServiceSimulatorFactory()).create("COM1");
 		ComOption comOption = new ComOption();
-		ComConnexion comConnexion=new ComConnexion("COM8",  comOption );
-		MeteoService_I meteoService=new MeteoService(comConnexion);
+		ComConnexion comConnexion = new ComConnexion("COM8", comOption);
+		MeteoService_I meteoService = new MeteoService(comConnexion);
 		comConnexion.setMeteoServiceCallback((MeteoServiceCallback_I)meteoService);
 		use(meteoService);
 		}
@@ -110,5 +110,4 @@ public class UseSimple
 			e.printStackTrace();
 			}
 		}
-
 	}
