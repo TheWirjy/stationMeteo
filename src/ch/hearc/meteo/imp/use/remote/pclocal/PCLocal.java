@@ -8,6 +8,7 @@ import ch.hearc.meteo.imp.com.logique.MeteoServiceCallback_I;
 import ch.hearc.meteo.imp.com.real.MeteoService;
 import ch.hearc.meteo.imp.com.real.com.ComConnexion;
 import ch.hearc.meteo.imp.com.real.com.ComOption;
+import ch.hearc.meteo.imp.com.simulateur.MeteoServiceSimulatorFactory;
 import ch.hearc.meteo.imp.use.remote.PC_I;
 import ch.hearc.meteo.spec.afficheur.AffichageOptions;
 import ch.hearc.meteo.spec.afficheur.AfficheurService_I;
@@ -24,8 +25,6 @@ import com.bilat.tools.reseau.rmi.IdTools;
 import com.bilat.tools.reseau.rmi.RmiTools;
 import com.bilat.tools.reseau.rmi.RmiURL;
 
-
-
 public class PCLocal implements PC_I
 	{
 
@@ -33,8 +32,9 @@ public class PCLocal implements PC_I
 	|*							Constructeurs							*|
 	\*------------------------------------------------------------------*/
 
-	public PCLocal(MeteoServiceOptions meteoServiceOptions, String portCom, AffichageOptions affichageOptions, RmiURL rmiURLafficheurManager)
+	public PCLocal(MeteoServiceOptions meteoServiceOptions, String portCom, AffichageOptions affichageOptions, RmiURL rmiURLafficheurManager, boolean simulateur)
 		{
+		this.simulateur = simulateur;
 		this.meteoServiceOptions = meteoServiceOptions;
 		this.portCom = portCom;
 		this.affichageOptions = affichageOptions;
@@ -45,13 +45,13 @@ public class PCLocal implements PC_I
 	|*							Methodes Public							*|
 	\*------------------------------------------------------------------*/
 
-	@Override public void run()
+	@Override
+	public void run()
 		{
 
 		try
 			{
 			afficheurRemote = (RemoteAfficheurCreator_I)RmiTools.connectionRemoteObjectBloquant(this.rmiURLafficheurManager);
-			//AfficheurService_I afficheur = new AfficheurSimulateurFactory().createOnLocalPC(affichageOptions, null);
 			server(); // avant
 			}
 		catch (Exception e)
@@ -88,13 +88,18 @@ public class PCLocal implements PC_I
 		{
 		// TODO Auto-generated method stub
 		/********************** moi ****************************/
-		//this.meteoService = (new MeteoServiceSimulatorFactory()).create(this.portCom);
-		//String portName = "COM";
-		//MeteoService_I meteoService = (new MeteoServiceSimulatorFactory()).create(portName);
-		ComOption comOption = new ComOption();
-		ComConnexion comConnexion=new ComConnexion(this.portCom,  comOption );
-		meteoService=new MeteoService(comConnexion);
-		comConnexion.setMeteoServiceCallback((MeteoServiceCallback_I)meteoService);
+		if (this.simulateur)
+			{
+			this.meteoService = (new MeteoServiceSimulatorFactory()).create(this.portCom);
+			}
+		else
+			{
+			ComOption comOption = new ComOption();
+			ComConnexion comConnexion = new ComConnexion(this.portCom, comOption);
+			this.meteoService = new MeteoService(comConnexion);
+			comConnexion.setMeteoServiceCallback((MeteoServiceCallback_I)this.meteoService);
+			}
+
 		meteoService.connect();
 		meteoService.start(meteoServiceOptions);
 		this.meteoServiceWrapper = new MeteoServiceWrapper(this.meteoService);
@@ -118,47 +123,50 @@ public class PCLocal implements PC_I
 		final AfficheurService_I afficheurService = (new AfficheurSimulateurFactory()).createOnLocalPC(this.affichageOptions, this.meteoServiceWrapper);
 
 		this.meteoService.addMeteoListener(new MeteoListener_I()
-		{
+			{
 
-			@Override public void temperaturePerformed(MeteoEvent event)
-				{
-				try
+				@Override
+				public void temperaturePerformed(MeteoEvent event)
 					{
-					afficheurService.printTemperature(event);
-					afficheurServiceWrapper.printTemperature(event);
+					try
+						{
+						afficheurService.printTemperature(event);
+						afficheurServiceWrapper.printTemperature(event);
+						}
+					catch (RemoteException e)
+						{
+						System.out.println("erreur print temperature");
+						}
 					}
-				catch (RemoteException e)
-					{
-					System.out.println("erreur print temperature");
-					}
-				}
 
-			@Override public void pressionPerformed(MeteoEvent event)
-				{
-				try
+				@Override
+				public void pressionPerformed(MeteoEvent event)
 					{
-					afficheurServiceWrapper.printPression(event);
-					afficheurService.printPression(event);
+					try
+						{
+						afficheurServiceWrapper.printPression(event);
+						afficheurService.printPression(event);
+						}
+					catch (RemoteException e)
+						{
+						System.out.println("erreur print pression");
+						}
 					}
-				catch (RemoteException e)
-					{
-					System.out.println("erreur print pression");
-					}
-				}
 
-			@Override public void altitudePerformed(MeteoEvent event)
-				{
-				try
+				@Override
+				public void altitudePerformed(MeteoEvent event)
 					{
-					afficheurServiceWrapper.printAltitude(event);
-					afficheurService.printAltitude(event);
+					try
+						{
+						afficheurServiceWrapper.printAltitude(event);
+						afficheurService.printAltitude(event);
+						}
+					catch (RemoteException e)
+						{
+						System.out.println("erreur print altitude");
+						}
 					}
-				catch (RemoteException e)
-					{
-					System.out.println("erreur print altitude");
-					}
-				}
-		});
+			});
 
 		/*meteoService.connect();
 		meteoService.start(meteoServiceOptions);*/
@@ -174,6 +182,7 @@ public class PCLocal implements PC_I
 	private AffichageOptions affichageOptions;
 	private RmiURL rmiURLafficheurManager;
 	private MeteoServiceWrapper meteoServiceWrapper;
+	private boolean simulateur;
 
 	// Tools
 	private final static String PREFIX = "METEO_SERVICE";
