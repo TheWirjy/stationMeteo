@@ -27,7 +27,7 @@ public class JPanelControl extends JPanel
 
 	private void apparance()
 		{
-		// TODO Auto-generated method stub
+		// RIEN
 
 		}
 
