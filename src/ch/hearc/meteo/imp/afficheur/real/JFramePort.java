@@ -57,15 +57,27 @@ public class JFramePort extends JFrame
 
 	private void refreshList()
 		{
+		int cpt = 0;
 		this.combo.removeAllItems();
 		this.listPort = meteoPort.findListPortSerie();
 		if (listPort.size() > 0)
 			{
 			for(String string:listPort)
 				{
-				combo.addItem(string);
+				if (!meteoPort.isStationMeteoAvailable(string, 1000))
+					{
+					combo.addItem(string);
+					cpt++;
+					}
 				}
-			buttonValider.setEnabled(true);
+			if (cpt > 0)
+				{
+				buttonValider.setEnabled(true);
+				}
+			}
+		else
+			{
+			buttonValider.setEnabled(false);
 			}
 		}
 
@@ -79,7 +91,6 @@ public class JFramePort extends JFrame
 		buttonSimulateur = new JButton("Simulateur");
 		String strIp = System.getProperty("ip", "157.26.110.116");
 		textFieldIP = new JTextField(strIp);
-
 
 		Box layoutHCombo = Box.createVerticalBox();
 		layoutHCombo.add(textFieldIP);
@@ -152,7 +163,7 @@ public class JFramePort extends JFrame
 			RmiURL rmiUrl = new RmiURL(RemoteAfficheurCreator.RMI_ID, ip, RmiTools.PORT_RMI_DEFAUT);
 
 			String portCom = "";
-			if(combo.getItemCount() > 0 && simulateur == false)
+			if (combo.getItemCount() > 0 && simulateur == false)
 				{
 				portCom = (String)combo.getSelectedItem();
 				}

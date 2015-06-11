@@ -9,8 +9,6 @@ import ch.hearc.meteo.imp.com.real.com.ComOption;
 import ch.hearc.meteo.imp.com.real.com.ComPortDetection;
 import ch.hearc.meteo.spec.com.port.MeteoPortDetectionService_I;
 
-
-
 public class MeteoPortDetectionService implements MeteoPortDetectionService_I
 	{
 
@@ -21,6 +19,7 @@ public class MeteoPortDetectionService implements MeteoPortDetectionService_I
 		{
 		this.comPortDetection = new ComPortDetection(new ComOption());
 		}
+
 	/*------------------------------------------------------------------*\
 	|*							Methodes Public							*|
 	\*------------------------------------------------------------------*/
@@ -43,19 +42,18 @@ public class MeteoPortDetectionService implements MeteoPortDetectionService_I
 		List<String> allPorts = findListPortSerie();
 		List<String> meteoListPort = new LinkedList<>();
 
-		for(String portName : allPorts)
+		for(String portName:allPorts)
 			{
-			if(listPortExcluded.contains(portName))
+			if (listPortExcluded.contains(portName))
 				{
 				continue;
 				}
 
-			if(isStationMeteoAvailable(portName,1000))
+			if (isStationMeteoAvailable(portName, 1000))
 				{
 				meteoListPort.add(portName);
 				}
 			}
-
 		return meteoListPort;
 		}
 
@@ -83,4 +81,3 @@ public class MeteoPortDetectionService implements MeteoPortDetectionService_I
 	private ComPortDetection comPortDetection;
 
 	}
-

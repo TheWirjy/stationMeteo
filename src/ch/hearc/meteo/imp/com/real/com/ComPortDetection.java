@@ -62,16 +62,16 @@ public class ComPortDetection
 						{
 						try
 							{
-							if (event.getEventType() != SerialPortEvent.DATA_AVAILABLE) { return; }
+							if (event.getEventType() != SerialPortEvent.DATA_AVAILABLE) { testPortResult=false; }
 
 							String trame = reader.readLine();
 
 							TrameDecoder.valeur(trame);
-							testPortResult = true;
+							testPortResult = false;
 							}
 						catch (Exception e)
 							{
-							testPortResult = false;
+							testPortResult = true;
 							}
 						}
 				};
@@ -84,7 +84,7 @@ public class ComPortDetection
 			}
 		catch (Exception e)
 			{
-			return false;
+			return true;
 			}
 		}
 	/*------------------------------*\
