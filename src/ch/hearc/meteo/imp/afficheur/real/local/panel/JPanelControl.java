@@ -19,6 +19,7 @@ public class JPanelControl extends JPanel
 		geometry();
 		control();
 		apparance();
+		buttonStart.setEnabled(false);
 		}
 
 	/*------------------------------------------------------------------*\
@@ -40,6 +41,8 @@ public class JPanelControl extends JPanel
 				public void actionPerformed(ActionEvent e)
 					{
 					afficheurServiceMOO.setPause(false);
+					buttonStart.setEnabled(false);
+					buttonStop.setEnabled(true);
 
 					}
 			});
@@ -51,8 +54,10 @@ public class JPanelControl extends JPanel
 				public void actionPerformed(ActionEvent e)
 					{
 					afficheurServiceMOO.setPause(true);
-					}
+					buttonStart.setEnabled(true);
+					buttonStop.setEnabled(false);					}
 			});
+
 
 		}
 
