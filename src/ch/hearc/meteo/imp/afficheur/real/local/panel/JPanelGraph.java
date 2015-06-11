@@ -18,6 +18,7 @@ import org.jfree.data.xy.XYSeries;
 import org.jfree.data.xy.XYSeriesCollection;
 
 import ch.hearc.meteo.imp.afficheur.real.local.ImageLoader;
+import ch.hearc.meteo.imp.afficheur.real.manage.AfficheurServiceMOO;
 import ch.hearc.meteo.imp.afficheur.real.manage.Stat;
 
 public class JPanelGraph extends JPanel
@@ -26,8 +27,9 @@ public class JPanelGraph extends JPanel
 	/*------------------------------------------------------------------*\
 	|*							Constructeurs							*|
 	\*------------------------------------------------------------------*/
-	public JPanelGraph(String titre, String unite, Stat stat)
+	public JPanelGraph(String titre, String unite, Stat stat, AfficheurServiceMOO afficheurServiceMOO)
 		{
+		this.afficheurServiceMOO = afficheurServiceMOO;
 		this.stat = stat;
 		this.titre = titre;
 		this.unite = unite;
@@ -52,12 +54,17 @@ public class JPanelGraph extends JPanel
 		Thread t1 = new Thread(new Runnable()
 			{
 
-				@Override public void run()
+				@Override
+				public void run()
 					{
-
 					while(true)
 						{
-						draw(stat.getLast());
+
+						while(afficheurServiceMOO.getPause() == false)
+							{
+							draw(stat.getLast());
+							attendre(1000);
+							}
 						attendre(1000);
 						}
 
@@ -165,5 +172,6 @@ public class JPanelGraph extends JPanel
 	private String titre;
 	private String unite;
 	private Stat stat;
+	private AfficheurServiceMOO afficheurServiceMOO;
 
 	}

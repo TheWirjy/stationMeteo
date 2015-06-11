@@ -109,9 +109,16 @@ public class AfficheurServiceMOO
 		isPause = etat;
 		}
 
+
+
 	/*------------------------------*\
 	|*				Get				*|
 	\*------------------------------*/
+
+	public boolean getPause()
+	{
+	return isPause;
+	}
 
 	public String getTitre()
 		{

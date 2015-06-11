@@ -9,6 +9,7 @@ import javax.swing.JPanel;
 import javax.swing.JSlider;
 import javax.swing.border.TitledBorder;
 
+import ch.hearc.meteo.imp.afficheur.real.manage.AfficheurServiceMOO;
 import ch.hearc.meteo.imp.afficheur.real.manage.Stat;
 
 public class JPanelGraphInfo extends JPanel
@@ -18,8 +19,9 @@ public class JPanelGraphInfo extends JPanel
 	|*							Constructeurs							*|
 	\*------------------------------------------------------------------*/
 
-	public JPanelGraphInfo(String titre, String unite, Stat stat)
+	public JPanelGraphInfo(String titre, String unite, Stat stat,AfficheurServiceMOO afficheurServiceMOO)
 		{
+		this.afficheurServieMOO = afficheurServiceMOO;
 		this.stat = stat;
 		this.titre = titre;
 		this.unite = unite;
@@ -52,7 +54,7 @@ public class JPanelGraphInfo extends JPanel
 		{
 
 		panelInfo = new JPanelInfo(titre, unite, stat);
-		panelGraph = new JPanelGraph(titre, unite, stat);
+		panelGraph = new JPanelGraph(titre, unite, stat,afficheurServieMOO);
 		BorderLayout borderLayout = new BorderLayout();
 		borderLayout.setHgap(5);
 		setLayout(borderLayout);
@@ -106,6 +108,7 @@ public class JPanelGraphInfo extends JPanel
 	private JPanelInfo panelInfo;
 	private JPanelGraph panelGraph;
 	private Stat stat;
+	private AfficheurServiceMOO afficheurServieMOO;
 
 	//Input
 	private String titre;

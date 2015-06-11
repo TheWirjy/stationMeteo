@@ -59,15 +59,16 @@ public class JPanelStationMeteo extends JPanel
 		setLayout(borderLayout);
 
 		add(panelAfficheur, BorderLayout.CENTER);
-		//add(panelControl, BorderLayout.SOUTH);
+		add(panelControl, BorderLayout.SOUTH);
 		}
 
 	private void geometry()
 		{
 
 		this.panelAfficheur = new JPanelAffichage(afficheurServiceMOO);
-		//this.panelControl = new JPanelControl(panelAfficheur, afficheurServiceMOO);
+		this.panelControl = new JPanelControl(afficheurServiceMOO);
 		}
+
 
 	/*------------------------------------------------------------------*\
 	|*							Attributs Private						*|
@@ -78,6 +79,6 @@ public class JPanelStationMeteo extends JPanel
 
 	//Tools
 	private JPanelAffichage panelAfficheur;
-	//private JPanelControl panelControl;
+	private JPanelControl panelControl;
 
 	}

@@ -70,9 +70,9 @@ public class JPanelAffichage extends JPanel
 	private void geometry()
 		{
 
-		panelTemperature = new JPanelGraphInfo("Température", "°C", afficheurServiceMOO.getStatTemperature());
-		panelPression = new JPanelGraphInfo("Pression", "hPa", afficheurServiceMOO.getStatPression());
-		panelAltitude = new JPanelGraphInfo("Altitude", "m", afficheurServiceMOO.getStatAltitude());
+		panelTemperature = new JPanelGraphInfo("Température", "°C", afficheurServiceMOO.getStatTemperature(),afficheurServiceMOO);
+		panelPression = new JPanelGraphInfo("Pression", "hPa", afficheurServiceMOO.getStatPression(),afficheurServiceMOO);
+		panelAltitude = new JPanelGraphInfo("Altitude", "m", afficheurServiceMOO.getStatAltitude(),afficheurServiceMOO);
 		}
 
 	private void control()
