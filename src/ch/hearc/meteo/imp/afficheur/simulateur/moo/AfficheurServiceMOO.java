@@ -191,7 +191,7 @@ public class AfficheurServiceMOO
 	// Inputs
 	private AffichageOptions affichageOptions;
 	private MeteoServiceWrapper_I meteoServiceRemote;
-	private MeteoServiceOptions meteoServiceOptions;
+	//private MeteoServiceOptions meteoServiceOptions;
 
 	// Tools
 	private List<MeteoEvent> listAltitude;

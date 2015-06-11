@@ -27,12 +27,11 @@ import ch.hearc.meteo.imp.afficheur.real.central.geoloc.TabGeoLoc;
 import ch.hearc.meteo.imp.afficheur.real.central.panel.jxmap.FancyWaypointRenderer;
 import ch.hearc.meteo.imp.afficheur.real.central.panel.jxmap.MyWaypoint;
 
-public class JPanelMap extends JPanel
+@SuppressWarnings("serial") public class JPanelMap extends JPanel
 	{
 
-	public JPanelMap(JPanelDefault panelDefault)
+	public JPanelMap()
 		{
-		this.panelDefault = panelDefault;
 		geometry();
 		control();
 		apparance();
@@ -80,7 +79,7 @@ public class JPanelMap extends JPanel
 
 	private void apparance()
 		{
-		// TODO Auto-generated method stub
+		// RIEN
 
 		}
 
@@ -88,7 +87,6 @@ public class JPanelMap extends JPanel
 		{
 		waypoints = TabGeoLoc.peupler();
 		MapsPoints = TabGeoLoc.getMapsPoints();
-		panelDefault.update();
 		// Create a waypoint painter that takes all the waypoints
 		WaypointPainter<MyWaypoint> waypointPainter = new WaypointPainter<MyWaypoint>();
 		waypointPainter.setWaypoints(waypoints);
@@ -100,8 +98,5 @@ public class JPanelMap extends JPanel
 	private JXMapViewer mapViewer;
 	private Map<String, GeoPosition> MapsPoints;
 	private Set<MyWaypoint> waypoints;
-
-	//inputs
-	private JPanelDefault panelDefault;
 
 	}

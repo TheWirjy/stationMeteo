@@ -2,7 +2,6 @@
 package ch.hearc.meteo.imp.afficheur.real.local.panel;
 
 import java.awt.BorderLayout;
-import java.util.List;
 
 import javax.swing.BorderFactory;
 import javax.swing.Box;
@@ -10,9 +9,7 @@ import javax.swing.JPanel;
 import javax.swing.JSlider;
 import javax.swing.border.TitledBorder;
 
-import ch.hearc.meteo.imp.afficheur.real.manage.AfficheurServiceMOO;
 import ch.hearc.meteo.imp.afficheur.real.manage.Stat;
-import ch.hearc.meteo.spec.com.meteo.listener.event.MeteoEvent;
 
 public class JPanelGraphInfo extends JPanel
 	{
@@ -21,11 +18,9 @@ public class JPanelGraphInfo extends JPanel
 	|*							Constructeurs							*|
 	\*------------------------------------------------------------------*/
 
-	public JPanelGraphInfo(String titre, String unite, Stat stat, List<MeteoEvent> list, AfficheurServiceMOO afficheurServiceMOO)
+	public JPanelGraphInfo(String titre, String unite, Stat stat)
 		{
-		this.afficheurServiceMOO = afficheurServiceMOO;
 		this.stat = stat;
-		this.list = list;
 		this.titre = titre;
 		this.unite = unite;
 
@@ -38,10 +33,6 @@ public class JPanelGraphInfo extends JPanel
 	/*------------------------------------------------------------------*\
 	|*							Methodes Public							*|
 	\*------------------------------------------------------------------*/
-	public void update()
-		{
-		panelInfo.update();
-		}
 
 	public JPanelInfo getPanelGraphInfo()
 		{
@@ -60,8 +51,8 @@ public class JPanelGraphInfo extends JPanel
 	private void geometry()
 		{
 
-		panelInfo = new JPanelInfo(titre, unite, stat, afficheurServiceMOO);
-		panelGraph = new JPanelGraph(titre, unite, stat, list, afficheurServiceMOO);
+		panelInfo = new JPanelInfo(titre, unite, stat);
+		panelGraph = new JPanelGraph(titre, unite, stat);
 		BorderLayout borderLayout = new BorderLayout();
 		borderLayout.setHgap(5);
 		setLayout(borderLayout);
@@ -76,7 +67,7 @@ public class JPanelGraphInfo extends JPanel
 
 	private void control()
 		{
-
+		//rien
 		}
 
 	private void apparance()
@@ -103,9 +94,9 @@ public class JPanelGraphInfo extends JPanel
 	|*				Set				*|
 	\*------------------------------*/
 	public void setSliderValue(int value)
-	{
-	panelInfo.setSliderValue(value);
-	}
+		{
+		panelInfo.setSliderValue(value);
+		}
 
 	/*------------------------------------------------------------------*\
 	|*							Attributs Private						*|
@@ -114,9 +105,7 @@ public class JPanelGraphInfo extends JPanel
 	//Tools
 	private JPanelInfo panelInfo;
 	private JPanelGraph panelGraph;
-	private List<MeteoEvent> list;
 	private Stat stat;
-	private AfficheurServiceMOO afficheurServiceMOO;
 
 	//Input
 	private String titre;

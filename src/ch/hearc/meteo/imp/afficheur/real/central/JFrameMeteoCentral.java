@@ -2,24 +2,18 @@
 package ch.hearc.meteo.imp.afficheur.real.central;
 
 import java.awt.BorderLayout;
-import java.awt.GridLayout;
-import java.awt.event.ActionEvent;
-import java.awt.event.ActionListener;
 
-import javax.swing.JButton;
 import javax.swing.JFrame;
 import javax.swing.JPanel;
 import javax.swing.JTabbedPane;
-import javax.swing.JToolBar;
 import javax.swing.SwingConstants;
 
 import ch.hearc.meteo.imp.afficheur.real.central.panel.JPanelDefault;
 import ch.hearc.meteo.imp.afficheur.real.central.panel.JPanelListMap;
 import ch.hearc.meteo.imp.afficheur.real.central.panel.JPanelMap;
 import ch.hearc.meteo.imp.afficheur.real.manage.AfficheurServiceMOO;
-import ch.hearc.meteo.spec.com.meteo.MeteoServiceOptions;
 
-public class JFrameMeteoCentral extends JFrame
+@SuppressWarnings("serial") public class JFrameMeteoCentral extends JFrame
 	{
 
 	private JFrameMeteoCentral()
@@ -31,13 +25,13 @@ public class JFrameMeteoCentral extends JFrame
 		}
 
 	public synchronized static JFrameMeteoCentral getInstance()
-	{
-	if(frameMeteoCentral==null)
 		{
-		frameMeteoCentral = new JFrameMeteoCentral();
-		}
+		if (frameMeteoCentral == null)
+			{
+			frameMeteoCentral = new JFrameMeteoCentral();
+			}
 		return frameMeteoCentral;
-	}
+		}
 
 	private void geometry()
 		{
@@ -53,38 +47,13 @@ public class JFrameMeteoCentral extends JFrame
 
 		JPanel panelMapTabbed = new JPanel();
 		tabbedPane.addTab("Map", null, panelMapTabbed, null);
-		panelMapTabbed.setLayout(new GridLayout(0, 2, 0, 0));
+		panelMapTabbed.setLayout(new BorderLayout());
 
-		JPanelMap panelMap = new JPanelMap(panelDefaultTabbed);
+		JPanelMap panelMap = new JPanelMap();
 		panelMapTabbed.add(panelMap, BorderLayout.CENTER);
 
 		JPanelListMap panelListMap = new JPanelListMap(panelMap);
-		panelMapTabbed.add(panelListMap);
-
-		JPanel panelMenu = new JPanel();
-		getContentPane().add(panelMenu, BorderLayout.NORTH);
-		panelMenu.setLayout(new BorderLayout(0, 0));
-
-		JToolBar toolBarMenu = new JToolBar();
-		toolBarMenu.setFloatable(false);
-		panelMenu.add(toolBarMenu, BorderLayout.NORTH);
-
-		JButton JButtonFile = new JButton("File");
-
-		toolBarMenu.add(JButtonFile);
-
-		JButton JButtonEdit = new JButton("Edit");
-		toolBarMenu.add(JButtonEdit);
-		JButton JButtonTest = new JButton("test");
-		JButtonTest.addActionListener(new ActionListener()
-			{
-
-				@Override public void actionPerformed(ActionEvent e)
-					{
-					JFrameMeteoCentral.this.panelDefaultTabbed.update();
-					}
-			});
-		toolBarMenu.add(JButtonTest);
+		panelMapTabbed.add(panelListMap, BorderLayout.EAST);
 
 		}
 
@@ -95,7 +64,6 @@ public class JFrameMeteoCentral extends JFrame
 
 	public void addStation(AfficheurServiceMOO afficheurServiceMOO)
 		{
-		//javax.swing.JOptionPane.showMessageDialog(null,"marche");
 		panelDefaultTabbed.addStation(afficheurServiceMOO);
 		}
 
@@ -106,24 +74,8 @@ public class JFrameMeteoCentral extends JFrame
 		setVisible(true); // last!
 		}
 
-	public void refresh()
-		{
-		panelDefaultTabbed.update();
-		}
-
-
-	public void refresh2()
-	{
-	panelDefaultTabbed.refresh();
-	}
-
-	public void updateMeteoServiceOptions(MeteoServiceOptions meteoServiceOptions)
-		{
-		//panelDefaultTabbed.updateMeteoServiceOptions( meteoServiceOptions);
-		}
 
 	private JPanelDefault panelDefaultTabbed;
-	private AfficheurServiceMOO afficheurServiceMOO;
-	private  static JFrameMeteoCentral frameMeteoCentral;
+	private static JFrameMeteoCentral frameMeteoCentral;
 
 	}

@@ -3,8 +3,6 @@ package ch.hearc.meteo.imp.afficheur.real.local.panel;
 
 import java.awt.GridLayout;
 import java.rmi.RemoteException;
-import java.util.ArrayList;
-import java.util.List;
 
 import javax.swing.JPanel;
 import javax.swing.JSlider;
@@ -13,7 +11,6 @@ import javax.swing.event.ChangeListener;
 
 import ch.hearc.meteo.imp.afficheur.real.manage.AfficheurServiceMOO;
 import ch.hearc.meteo.spec.com.meteo.MeteoServiceOptions;
-import ch.hearc.meteo.spec.com.meteo.listener.event.MeteoEvent;
 
 public class JPanelAffichage extends JPanel
 	{
@@ -39,13 +36,6 @@ public class JPanelAffichage extends JPanel
 		panelAltitude.getPanelGraphInfo().setEnableSlider(enable);
 		panelPression.getPanelGraphInfo().setEnableSlider(enable);
 		panelTemperature.getPanelGraphInfo().setEnableSlider(enable);
-		}
-
-	public void update()
-		{
-		panelAltitude.update();
-		panelPression.update();
-		panelTemperature.update();
 		}
 
 	/*------------------------------*\
@@ -80,12 +70,9 @@ public class JPanelAffichage extends JPanel
 	private void geometry()
 		{
 
-		panelTemperature = new JPanelGraphInfo("Température", "°C", afficheurServiceMOO.getStatTemperature(), afficheurServiceMOO.getListTemperature(), afficheurServiceMOO);
-		panelPression = new JPanelGraphInfo("Pression", "hPa", afficheurServiceMOO.getStatPression(), afficheurServiceMOO.getListPression(), afficheurServiceMOO);
-		panelAltitude = new JPanelGraphInfo("Altitude", "m", afficheurServiceMOO.getStatAltitude(), afficheurServiceMOO.getListAltitude(), afficheurServiceMOO);
-		listAltitude = new ArrayList<MeteoEvent>(N);
-		listPression = new ArrayList<MeteoEvent>(N);
-		listTemperature = new ArrayList<MeteoEvent>(N);
+		panelTemperature = new JPanelGraphInfo("Température", "°C", afficheurServiceMOO.getStatTemperature());
+		panelPression = new JPanelGraphInfo("Pression", "hPa", afficheurServiceMOO.getStatPression());
+		panelAltitude = new JPanelGraphInfo("Altitude", "m", afficheurServiceMOO.getStatAltitude());
 		}
 
 	private void control()
@@ -109,12 +96,11 @@ public class JPanelAffichage extends JPanel
 		slideTemp.addChangeListener(new ChangeListener()
 			{
 
-				@Override
-				public void stateChanged(ChangeEvent e)
+				@Override public void stateChanged(ChangeEvent e)
 					{
 					try
 						{
-						 meteoOptions = afficheurServiceMOO.getMeteoServiceOptions();
+						meteoOptions = afficheurServiceMOO.getMeteoServiceOptions();
 						meteoOptions.setTemperatureDT(slideTemp.getValue());
 						afficheurServiceMOO.setMeteoServiceOptions(meteoOptions);
 
@@ -131,8 +117,7 @@ public class JPanelAffichage extends JPanel
 		slidPres.addChangeListener(new ChangeListener()
 			{
 
-				@Override
-				public void stateChanged(ChangeEvent e)
+				@Override public void stateChanged(ChangeEvent e)
 					{
 					try
 						{
@@ -153,8 +138,7 @@ public class JPanelAffichage extends JPanel
 		slidAlt.addChangeListener(new ChangeListener()
 			{
 
-				@Override
-				public void stateChanged(ChangeEvent e)
+				@Override public void stateChanged(ChangeEvent e)
 					{
 					try
 						{
@@ -178,8 +162,7 @@ public class JPanelAffichage extends JPanel
 		Thread t1 = new Thread(new Runnable()
 			{
 
-				@Override
-				public void run()
+				@Override public void run()
 					{
 					JSlider slideTemp = panelTemperature.getSlider();
 					JSlider slidPres = panelPression.getSlider();
@@ -207,9 +190,8 @@ public class JPanelAffichage extends JPanel
 							}
 						catch (InterruptedException e)
 							{
-							// TODO Auto-generated catch block
 							e.printStackTrace();
-							} //disons
+							}
 						}
 					}
 			});
@@ -234,14 +216,10 @@ public class JPanelAffichage extends JPanel
 	private JPanelGraphInfo panelTemperature;
 	private JPanelGraphInfo panelPression;
 	private JPanelGraphInfo panelAltitude;
-	private List<MeteoEvent> listAltitude;
-	private List<MeteoEvent> listPression;
-	private List<MeteoEvent> listTemperature;
 	private JSlider slidAlt;
 	private JSlider slidPres;
 	private JSlider slideTemp;
 	private MeteoServiceOptions meteoOptions;
-
 
 	private static final int N = 30;
 	private AfficheurServiceMOO afficheurServiceMOO;

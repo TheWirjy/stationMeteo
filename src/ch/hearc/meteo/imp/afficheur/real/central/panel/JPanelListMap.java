@@ -2,15 +2,12 @@
 package ch.hearc.meteo.imp.afficheur.real.central.panel;
 
 import java.awt.BorderLayout;
-import java.awt.event.ActionEvent;
-import java.awt.event.ActionListener;
 import java.util.Iterator;
 import java.util.Map;
 import java.util.Map.Entry;
 
 import javax.swing.DefaultListModel;
 import javax.swing.DefaultListSelectionModel;
-import javax.swing.JButton;
 import javax.swing.JList;
 import javax.swing.JPanel;
 import javax.swing.JScrollPane;
@@ -20,10 +17,9 @@ import javax.swing.event.ListSelectionListener;
 
 import org.jxmapviewer.viewer.GeoPosition;
 
-import ch.hearc.meteo.imp.afficheur.real.central.ComSim.SimulationStations;
 import ch.hearc.meteo.imp.afficheur.real.central.geoloc.TabGeoLoc;
 
-public class JPanelListMap extends JPanel
+@SuppressWarnings("serial") public class JPanelListMap extends JPanel
 	{
 
 	public JPanelListMap(JPanelMap panelMap)
@@ -38,7 +34,7 @@ public class JPanelListMap extends JPanel
 
 	private void apparance()
 		{
-		// TODO Auto-generated method stub
+		// RIEN
 
 		}
 
@@ -47,26 +43,18 @@ public class JPanelListMap extends JPanel
 		list.addListSelectionListener(new ListSelectionListener()
 			{
 
-				@Override
-				public void valueChanged(ListSelectionEvent e)
+				@Override public void valueChanged(ListSelectionEvent e)
 					{
-					// TODO Auto-generated method stub
-					selectedIndex = list.getSelectedIndex();
+					if (list.getSelectedIndex() != -1)
+						{
+						selectedIndex = list.getSelectedIndex();
+						}
 					panelMap.updateAll();
 
 					}
 			});
 
-		mybutton.addActionListener(new ActionListener()
-			{
-
-				@Override
-				public void actionPerformed(ActionEvent e)
-					{
-					SimulationStations.removeOneStation();
-					peupler();
-					}
-			});
+		refreshList();
 
 		}
 
@@ -74,20 +62,14 @@ public class JPanelListMap extends JPanel
 		{
 		setLayout(new BorderLayout(0, 0));
 		listModel = new DefaultListModel<String>();
-		peupler();
 		list = new JList<String>(listModel);
-
+		peupler();
 		JScrollPane pane = new JScrollPane(list);
 		DefaultListSelectionModel m = new DefaultListSelectionModel();
 		m.setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
 		m.setLeadAnchorNotificationEnabled(false);
 		list.setSelectionModel(m);
-
 		add(pane, BorderLayout.CENTER);
-
-		mybutton = new JButton("Test add points");
-		add(mybutton, BorderLayout.SOUTH);
-
 		}
 
 	public static int getSelectedIndex()
@@ -100,17 +82,43 @@ public class JPanelListMap extends JPanel
 		listModel.clear();
 		Map<String, GeoPosition> map = TabGeoLoc.getMapsPoints();
 		Iterator<Entry<String, GeoPosition>> iterator = map.entrySet().iterator();
-		for(int i = 1; i <= SimulationStations.getNombreDeStation(); i++)
+		for(int i = 1; i <= TabGeoLoc.getNbStation(); i++)
 			{
 			String stationName = iterator.next().getKey();
 
 			listModel.addElement("Station " + i + ": " + stationName);
 			}
+		list.setSelectedIndex(selectedIndex);
+		}
+
+	public void refreshList()
+		{
+		Thread t1 = new Thread(new Runnable()
+			{
+
+				@Override public void run()
+					{
+					while(true)
+						{
+						peupler();
+						try
+							{
+							Thread.sleep(3000);
+							}
+						catch (InterruptedException e)
+							{
+							e.printStackTrace();
+							}
+						}
+
+					}
+			});
+		t1.start();
+
 		}
 
 	private JPanelMap panelMap;
 	private JList<String> list;
 	private static int selectedIndex;
 	private DefaultListModel<String> listModel;
-	private JButton mybutton;
 	}

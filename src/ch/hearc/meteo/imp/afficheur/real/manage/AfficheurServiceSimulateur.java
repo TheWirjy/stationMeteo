@@ -1,7 +1,6 @@
 
 package ch.hearc.meteo.imp.afficheur.real.manage;
 
-
 import ch.hearc.meteo.imp.afficheur.real.local.JFrameStationMeteo;
 import ch.hearc.meteo.spec.afficheur.AffichageOptions;
 import ch.hearc.meteo.spec.afficheur.AfficheurService_I;
@@ -22,7 +21,7 @@ public class AfficheurServiceSimulateur implements AfficheurService_I
 	public AfficheurServiceSimulateur(AffichageOptions affichageOptions, MeteoServiceWrapper_I meteoServiceRemote)
 		{
 		afficheurServiceMOO = new AfficheurServiceMOO(affichageOptions, meteoServiceRemote);
-		jFrameStationMeteo = new JFrameStationMeteo(afficheurServiceMOO);
+		new JFrameStationMeteo(afficheurServiceMOO);
 		}
 
 	/*------------------------------------------------------------------*\
@@ -32,29 +31,21 @@ public class AfficheurServiceSimulateur implements AfficheurService_I
 	@Override public void printAltitude(MeteoEvent event)
 		{
 		afficheurServiceMOO.printAltitude(event);
-		jFrameStationMeteo.refresh();
 		}
 
 	@Override public void printTemperature(MeteoEvent event)
 		{
 		afficheurServiceMOO.printTemperature(event);
-		jFrameStationMeteo.refresh();
 		}
 
 	@Override public void printPression(MeteoEvent event)
 		{
 		afficheurServiceMOO.printPression(event);
-		jFrameStationMeteo.refresh();
 		}
 
 	/*------------------------------*\
 	|*				Set				*|
 	\*------------------------------*/
-
-	@Override public void updateMeteoServiceOptions(MeteoServiceOptions meteoServiceOptions)
-		{
-		jFrameStationMeteo.updateMeteoServiceOptions(meteoServiceOptions);
-		}
 
 	/*------------------------------------------------------------------*\
 	|*							Methodes Private						*|
@@ -66,6 +57,11 @@ public class AfficheurServiceSimulateur implements AfficheurService_I
 
 	// Tools
 	private AfficheurServiceMOO afficheurServiceMOO;
-	private JFrameStationMeteo jFrameStationMeteo;
+
+	@Override public void updateMeteoServiceOptions(MeteoServiceOptions meteoServiceOptions)
+		{
+		// RIEN
+
+		}
 
 	}

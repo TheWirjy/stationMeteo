@@ -7,7 +7,6 @@ import javax.swing.Box;
 import javax.swing.JPanel;
 
 import ch.hearc.meteo.imp.afficheur.real.manage.AfficheurServiceMOO;
-import ch.hearc.meteo.spec.com.meteo.MeteoServiceOptions;
 
 public class JPanelStationMeteo extends JPanel
 	{
@@ -68,16 +67,6 @@ public class JPanelStationMeteo extends JPanel
 
 		this.panelAfficheur = new JPanelAffichage(afficheurServiceMOO);
 		//this.panelControl = new JPanelControl(panelAfficheur, afficheurServiceMOO);
-		}
-
-	public void update()
-		{
-		panelAfficheur.update();
-		}
-
-	public void updateMeteoServiceOptions(MeteoServiceOptions meteoServiceOptions)
-		{
-		//	panelSlider.updateMeteoServiceOptions( meteoServiceOptions);
 		}
 
 	/*------------------------------------------------------------------*\

@@ -5,7 +5,6 @@ import java.awt.Dimension;
 import java.awt.FlowLayout;
 import java.awt.Font;
 import java.awt.Graphics;
-import java.awt.Image;
 import java.text.DecimalFormat;
 import java.text.NumberFormat;
 
@@ -18,38 +17,56 @@ import javax.swing.event.ChangeEvent;
 import javax.swing.event.ChangeListener;
 
 import ch.hearc.meteo.imp.afficheur.real.local.ImageLoader;
-import ch.hearc.meteo.imp.afficheur.real.manage.AfficheurServiceMOO;
 import ch.hearc.meteo.imp.afficheur.real.manage.Stat;
 import ch.hearc.meteo.imp.afficheur.simulateur.vue.atome.MathTools;
 
-public class JPanelInfo extends JPanel
+@SuppressWarnings("serial") public class JPanelInfo extends JPanel
 	{
 
 	/*------------------------------------------------------------------*\
 	|*							Constructeurs							*|
 	\*------------------------------------------------------------------*/
-	JPanelInfo(String titre, String unite, Stat stat, AfficheurServiceMOO afficheurServiceMOO)
+	JPanelInfo(String titre, String unite, Stat stat)
 		{
-		this.afficheurServiceMOO = afficheurServiceMOO;
 		this.stat = stat;
 		this.titre = titre;
 		this.unite = unite;
 		geometry();
 		control();
 		apparance();
+		updateStat();
 		}
 
 	/*------------------------------------------------------------------*\
 	|*							Methodes Public							*|
 	\*------------------------------------------------------------------*/
 
-	public void update()
+	public void updateStat()
 		{
-		this.labelValue.setText(MathTools.arrondir(stat.getLast()) + " " + unite);
-		this.labelMaxValue.setText("maximum : " + MathTools.arrondir(stat.getMax()) + " " + unite);
-		this.labelMinValue.setText("minimum : " + MathTools.arrondir(stat.getMin()) + " " + unite);
-		this.labelMeanValue.setText("moyenne : " + MathTools.arrondir(stat.getMoy()) + " " + unite);
+		Thread t1 = new Thread(new Runnable()
+			{
 
+				@Override public void run()
+					{
+					while(true)
+						{
+						labelValue.setText(MathTools.arrondir(stat.getLast()) + " " + unite);
+						labelMaxValue.setText("maximum : " + MathTools.arrondir(stat.getMax()) + " " + unite);
+						labelMinValue.setText("minimum : " + MathTools.arrondir(stat.getMin()) + " " + unite);
+						labelMeanValue.setText("moyenne : " + MathTools.arrondir(stat.getMoy()) + " " + unite);
+						try
+							{
+							Thread.sleep(100);
+							}
+						catch (InterruptedException e)
+							{
+							// TODO Auto-generated catch block
+							e.printStackTrace();
+							}
+						}
+					}
+			});
+		t1.start();
 		}
 
 	/*------------------------------*\
@@ -58,12 +75,12 @@ public class JPanelInfo extends JPanel
 
 	public void setEnableSlider(boolean enable)
 		{
-		this.sliderTime.setEnabled(enable);
+		this.sliderDT.setEnabled(enable);
 		}
 
 	public void setSliderValue(int value)
 		{
-		this.sliderTime.setValue(value);
+		this.sliderDT.setValue(value);
 		}
 
 	/*------------------------------*\
@@ -72,12 +89,12 @@ public class JPanelInfo extends JPanel
 
 	public int getSliderValue()
 		{
-		return this.sliderTime.getValue();
+		return this.sliderDT.getValue();
 		}
 
 	public JSlider getSlider()
 		{
-		return this.sliderTime;
+		return this.sliderDT;
 		}
 
 	/*------------------------------------------------------------------*\
@@ -86,13 +103,12 @@ public class JPanelInfo extends JPanel
 
 	private void control()
 		{
-		this.sliderTime.addChangeListener(new ChangeListener()
+		this.sliderDT.addChangeListener(new ChangeListener()
 			{
 
-				@Override
-				public void stateChanged(ChangeEvent e)
+				@Override public void stateChanged(ChangeEvent e)
 					{
-					labelEchant.setText("dt = " + decimalFormat.format(sliderTime.getValue() / 1000.0) + " s");
+					labelEchant.setText("dt = " + decimalFormat.format(sliderDT.getValue() / 1000.0) + " s");
 
 					}
 			});
@@ -103,14 +119,13 @@ public class JPanelInfo extends JPanel
 		{
 		setPreferredSize(new Dimension(180, 10));
 		labelValue.setFont(font);
-		sliderTime.setPreferredSize(new Dimension(100, 30));
-		sliderTime.setMinimum(100);
-		sliderTime.setMaximum(10000);
+		sliderDT.setPreferredSize(new Dimension(100, 30));
+		sliderDT.setMinimum(500);
+		sliderDT.setMaximum(10000);
 
 		}
 
-	@Override
-	public void paintComponent(Graphics g)
+	@Override public void paintComponent(Graphics g)
 		{
 		super.paintComponent(g);
 		final ImageIcon bg = ImageLoader.loadSynchroneJar("ressources/backgroundcarree.png");
@@ -121,7 +136,7 @@ public class JPanelInfo extends JPanel
 		{
 		font = new Font("Arial", Font.PLAIN, 20);
 
-		sliderTime = new JSlider();
+		sliderDT = new JSlider();
 		boxV = Box.createVerticalBox();
 		boxH = Box.createHorizontalBox();
 
@@ -132,7 +147,7 @@ public class JPanelInfo extends JPanel
 		labelMinValue = new JLabel("minimum : -- " + unite);
 		labelMaxValue = new JLabel("maximum : -- " + unite);
 		labelMeanValue = new JLabel("moyenne : -- " + unite);
-		labelEchant = new JLabel("dt = " + decimalFormat.format(sliderTime.getValue() / 1000.0) + " s");
+		labelEchant = new JLabel("dt = " + decimalFormat.format(sliderDT.getValue() / 1000.0) + " s");
 
 		setLayout(new FlowLayout());
 
@@ -147,7 +162,7 @@ public class JPanelInfo extends JPanel
 		boxV.add(Box.createVerticalStrut(3));
 		boxV.add(labelEchant);
 		boxH.add(Box.createHorizontalGlue());
-		boxH.add(sliderTime);
+		boxH.add(sliderDT);
 		boxH.add(Box.createHorizontalGlue());
 		boxV.add(boxH);
 
@@ -160,23 +175,20 @@ public class JPanelInfo extends JPanel
 
 	// input
 	private String unite;
-	@SuppressWarnings("unused")
-	private String titre;
+	@SuppressWarnings("unused") private String titre;
 	// tools
 	private JLabel labelValue;
 	private JLabel labelMinValue;
 	private JLabel labelMaxValue;
 	private JLabel labelMeanValue;
 	private JLabel labelEchant;
-	private JSlider sliderTime;
+	private JSlider sliderDT;
 
 	private NumberFormat decimalFormat;
 	private Stat stat;
-	private AfficheurServiceMOO afficheurServiceMOO;
 
 	private Box boxV;
 	private Box boxH;
 
 	private Font font;
-	private Image bg;
 	}

@@ -18,7 +18,7 @@ public class JPanelData extends JPanel
 	public JPanelData(AfficheurServiceMOO afficheurServiceMOO)
 		{
 		// Inputs
-		this.afficheurServiceMOO = afficheurServiceMOO;
+	//	this.afficheurServiceMOO = afficheurServiceMOO;
 
 		// Tools
 		this.pannelPression = new JPanelEvent(afficheurServiceMOO.getStatPression(), afficheurServiceMOO.getListPression(), "Pression");
@@ -77,7 +77,7 @@ public class JPanelData extends JPanel
 	\*------------------------------------------------------------------*/
 
 	// Inputs
-	private AfficheurServiceMOO afficheurServiceMOO;
+	//private AfficheurServiceMOO afficheurServiceMOO;
 
 	// Tools
 	private JPanelEvent pannelPression;

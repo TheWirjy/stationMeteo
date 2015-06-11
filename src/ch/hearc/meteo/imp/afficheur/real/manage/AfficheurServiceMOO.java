@@ -74,8 +74,6 @@ public class AfficheurServiceMOO
 			}
 		}
 
-
-
 	/*------------------------------*\
 	|*				remote			*|
 	\*------------------------------*/
@@ -175,12 +173,12 @@ public class AfficheurServiceMOO
 
 	private static void afficherConsole(List<MeteoEvent> listMeteoEvent, String titre)
 		{
-	//	System.out.print("[AfficheurService] : " + titre + " : ");
+			System.out.print("[AfficheurService] : " + titre + " : ");
 		for(MeteoEvent meteoEvent:listMeteoEvent)
 			{
-		//	System.out.print(meteoEvent.getValue() + " ");
+				System.out.print(meteoEvent.getValue() + " ");
 			}
-	//	System.out.println();
+			System.out.println();
 
 		}
 
@@ -191,7 +189,6 @@ public class AfficheurServiceMOO
 	// Inputs
 	private AffichageOptions affichageOptions;
 	private MeteoServiceWrapper_I meteoServiceRemote;
-	private MeteoServiceOptions meteoServiceOptions;
 
 	// Tools
 	private List<MeteoEvent> listAltitude;

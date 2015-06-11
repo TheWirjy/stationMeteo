@@ -4,8 +4,6 @@ package ch.hearc.meteo.imp.afficheur.real.local.panel;
 import java.awt.BorderLayout;
 import java.awt.Color;
 import java.awt.Font;
-import java.awt.Image;
-import java.util.List;
 
 import javax.swing.ImageIcon;
 import javax.swing.JPanel;
@@ -20,9 +18,7 @@ import org.jfree.data.xy.XYSeries;
 import org.jfree.data.xy.XYSeriesCollection;
 
 import ch.hearc.meteo.imp.afficheur.real.local.ImageLoader;
-import ch.hearc.meteo.imp.afficheur.real.manage.AfficheurServiceMOO;
 import ch.hearc.meteo.imp.afficheur.real.manage.Stat;
-import ch.hearc.meteo.spec.com.meteo.listener.event.MeteoEvent;
 
 public class JPanelGraph extends JPanel
 	{
@@ -30,11 +26,9 @@ public class JPanelGraph extends JPanel
 	/*------------------------------------------------------------------*\
 	|*							Constructeurs							*|
 	\*------------------------------------------------------------------*/
-	public JPanelGraph(String titre, String unite, Stat stat, List<MeteoEvent> list, AfficheurServiceMOO afficheurServiceMOO)
+	public JPanelGraph(String titre, String unite, Stat stat)
 		{
-		this.afficheurServiceMOO = afficheurServiceMOO;
 		this.stat = stat;
-		this.list = list;
 		this.titre = titre;
 		this.unite = unite;
 		compteurGraph = 0;
@@ -58,8 +52,7 @@ public class JPanelGraph extends JPanel
 		Thread t1 = new Thread(new Runnable()
 			{
 
-				@Override
-				public void run()
+				@Override public void run()
 					{
 
 					while(true)
@@ -171,8 +164,6 @@ public class JPanelGraph extends JPanel
 	private XYSeries series;
 	private String titre;
 	private String unite;
-	private Image bg;
 	private Stat stat;
-	private List<MeteoEvent> list;
-	private AfficheurServiceMOO afficheurServiceMOO;
+
 	}
